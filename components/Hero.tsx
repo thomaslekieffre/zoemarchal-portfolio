@@ -23,7 +23,7 @@ export default function Hero() {
 
       {/* Zone plein écran — contenu centré */}
       <div className="relative z-10 h-screen flex flex-col items-center justify-center px-4">
-        <div className="flex flex-col items-center w-full max-w-[1337px]" style={{ gap: 0 }}>
+        <div className="flex flex-col items-center w-full" style={{ gap: 0 }}>
 
           {/* "Portfolio" avec avatar au milieu */}
           <motion.div

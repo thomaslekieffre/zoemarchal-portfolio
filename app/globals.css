@@ -65,9 +65,9 @@
 
 /* ─── Hero responsive sizing ─────────────────────────────────────────── */
 :root {
-  --hero-font: clamp(70px, 24vw, 520px);
-  --hero-avatar: clamp(55px, 15vw, 340px);
-  --hero-margin: -1.8vw;
+  --hero-font: clamp(90px, 28vw, 560px);
+  --hero-avatar: clamp(70px, 18vw, 360px);
+  --hero-margin: -2vw;
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
