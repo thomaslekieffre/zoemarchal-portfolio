@@ -46,7 +46,7 @@ export default function JumioProject() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 w-full md:w-auto"
-          style={{ maxWidth: 500, minWidth: "min(300px, 100%)" }}
+          style={{ maxWidth: 600, minWidth: "min(340px, 100%)" }}
         >
           <ProjectImg
             src="/projects/jumio/jumiop1.png" alt="Jumio couverture" placeholder="jumiop1.png"
