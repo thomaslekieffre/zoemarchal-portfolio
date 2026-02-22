@@ -19,7 +19,7 @@ function ProjectImg({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl shadow-xl"
+      className="relative overflow-hidden"
       style={{ ...style, transform: `rotate(${rotation}deg)`, transformOrigin: "center" }}
     >
       <Image src={src} alt={alt} fill className="object-cover" sizes="300px"
