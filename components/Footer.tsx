@@ -22,7 +22,7 @@ function XIcon({ size = 14 }: { size?: number }) {
 }
 
 const contacts = [
-  { icon: <DiscordIcon size={14} />, label: "zoe.marchal", href: "#" },
+  { icon: <DiscordIcon size={14} />, label: "zoe.marchal", href: "https://discord.gg/2J4bHJ8a" },
   { icon: <Phone size={14} strokeWidth={2.5} />, label: "07 86 49 92 59", href: "tel:+33786499259" },
   { icon: <Instagram size={14} strokeWidth={2.5} />, label: "@zozoriginale", href: "https://instagram.com/zozoriginale" },
   { icon: <Mail size={14} strokeWidth={2.5} />, label: "z.marchal10@gmail.com", href: "mailto:z.marchal10@gmail.com" },
