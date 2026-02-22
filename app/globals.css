@@ -181,3 +181,45 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+
+/* ─── Admin UI ─────────────────────────────────────────────────────────── */
+.admin-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(9, 46, 103, 0.2);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 14px;
+  color: #092e67;
+  background: white;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.admin-input:focus {
+  border-color: #092e67;
+}
+.admin-btn-primary {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: #092e67;
+  color: #fce4d8;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.admin-btn-primary:hover { opacity: 0.85; }
+.admin-btn-secondary {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(9, 46, 103, 0.3);
+  color: #092e67;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+.admin-btn-secondary:hover { border-color: #092e67; }
