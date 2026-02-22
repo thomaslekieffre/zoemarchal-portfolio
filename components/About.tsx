@@ -170,7 +170,7 @@ export default function About() {
               {/* Contact */}
               <motion.div custom={4} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 className="flex flex-col gap-2">
-                <SectionTitle size="lg">Contact</SectionTitle>
+                <SectionTitle>Contact</SectionTitle>
                 <div className="flex flex-col gap-2">
                   {contacts.map((c, i) => (
                     <a key={i} href={c.href} target="_blank" rel="noopener noreferrer"

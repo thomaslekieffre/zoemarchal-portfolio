@@ -60,6 +60,24 @@ export const metadata: Metadata = {
   title: "Marchal Zoé — Portfolio",
   description:
     "Portfolio de Zoé Marchal, graphic designer. Identité visuelle, UI, affiche, édition.",
+  openGraph: {
+    title: "Marchal Zoé — Portfolio",
+    description: "Portfolio de Zoé Marchal, graphic designer.",
+    images: [
+      {
+        url: "/images/avatar.png",
+        width: 400,
+        height: 400,
+        alt: "Zoé Marchal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Marchal Zoé — Portfolio",
+    description: "Portfolio de Zoé Marchal, graphic designer.",
+    images: ["/images/avatar.png"],
+  },
 };
 
 export default function RootLayout({
