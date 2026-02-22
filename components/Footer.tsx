@@ -21,15 +21,12 @@ function XIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-const leftContacts = [
+const contacts = [
   { icon: <DiscordIcon size={14} />, label: "zoe.marchal", href: "#" },
-  { icon: <Instagram size={14} strokeWidth={2.5} />, label: "@zozoriginale", href: "https://instagram.com/zozoriginale" },
-  { icon: <XIcon size={14} />, label: "@zozoriginale", href: "https://x.com/zozoriginale" },
-];
-
-const rightContacts = [
   { icon: <Phone size={14} strokeWidth={2.5} />, label: "07 86 49 92 59", href: "tel:+33786499259" },
+  { icon: <Instagram size={14} strokeWidth={2.5} />, label: "@zozoriginale", href: "https://instagram.com/zozoriginale" },
   { icon: <Mail size={14} strokeWidth={2.5} />, label: "z.marchal10@gmail.com", href: "mailto:z.marchal10@gmail.com" },
+  { icon: <XIcon size={14} />, label: "@zozoriginale", href: "https://x.com/zozoriginale" },
 ];
 
 export default function Footer() {
@@ -58,44 +55,23 @@ export default function Footer() {
             <WavyUnderline width="100%" height={6} />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-            <div className="flex flex-col gap-2.5">
-              {leftContacts.map((c, i) => (
-                <a
-                  key={i}
-                  href={c.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm footer-chip"
-                  style={{
-                    border: "1.5px solid var(--color-blue)",
-                    color: "var(--color-blue)",
-                  }}
-                >
-                  {c.icon}
-                  <span>{c.label}</span>
-                </a>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              {rightContacts.map((c, i) => (
-                <a
-                  key={i}
-                  href={c.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm footer-chip"
-                  style={{
-                    border: "1.5px solid var(--color-blue)",
-                    color: "var(--color-blue)",
-                  }}
-                >
-                  {c.icon}
-                  <span>{c.label}</span>
-                </a>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2.5" style={{ maxWidth: 420 }}>
+            {contacts.map((c, i) => (
+              <a
+                key={i}
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm footer-chip"
+                style={{
+                  border: "1.5px solid var(--color-blue)",
+                  color: "var(--color-blue)",
+                }}
+              >
+                {c.icon}
+                <span>{c.label}</span>
+              </a>
+            ))}
           </div>
         </motion.div>
 
