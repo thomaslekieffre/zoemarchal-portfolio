@@ -166,9 +166,9 @@ body {
 }
 
 .footer-chip:hover {
-  transform: scaleX(0.9);
-  border-color: #ED739A !important;
-  color: #ED739A !important;
+  transform: scale(0.92);
+  border-color: #a17cc1 !important;
+  color: #a17cc1 !important;
 }
 
 .chip-lg {
