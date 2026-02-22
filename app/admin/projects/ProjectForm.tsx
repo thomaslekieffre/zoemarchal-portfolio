@@ -146,73 +146,124 @@ export default function ProjectForm({ project }: { project?: Project }) {
 
   const roleOptions = IMAGE_ROLES[form.layout];
 
+  const IMAGE_ROLE_HELP: Record<ProjectLayout, React.ReactNode> = {
+    identity: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>overlay</strong> (index 0) — 1ère image superposée à droite, format paysage</li>
+        <li><strong>overlay</strong> (index 1) — 2ème image superposée à droite, format portrait</li>
+        <li><strong>bottom</strong> (index 0) — mockup laptop en bas à gauche</li>
+        <li><strong>bottom</strong> (index 1) — petite image en bas au centre</li>
+        <li><strong>bottom</strong> (index 2) — petite image en bas à droite</li>
+      </ul>
+    ),
+    ui: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>grid</strong> (index 0 à 3) — 4 images en grille 2×2 à gauche du projet</li>
+        <li>Ajouter les 4 images avec index 0, 1, 2, 3</li>
+      </ul>
+    ),
+    print: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>hero</strong> — l'affiche principale (colonne gauche, en haut)</li>
+        <li><strong>portrait</strong> (index 0, 1, 2) — les 3 photos/portraits (colonne gauche, en bas)</li>
+        <li><strong>mockup</strong> — le mockup final (colonne droite, en bas)</li>
+      </ul>
+    ),
+  };
+
+  const FONT_OPTIONS = [
+    { label: "Borel (titres manuscrits)", value: "font-borel" },
+    { label: "Sen (corps de texte)", value: "font-sen" },
+    { label: "Jost (sans-serif moderne)", value: "font-jost" },
+    { label: "Barlow Condensed (capitales)", value: "font-barlow" },
+    { label: "DM Sans (body par défaut)", value: "font-body" },
+  ];
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
 
       {/* Infos de base */}
-      <Section title="Informations">
+      <Section
+        title="Informations générales"
+        hint="Les infos principales du projet qui s'affichent dans la section de présentation."
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Titre *">
+          <Field label="Titre *" hint="Nom du projet affiché en grand sur le portfolio.">
             <input required value={form.title} onChange={(e) => set("title", e.target.value)}
-              className="admin-input" placeholder="Mon projet" />
+              className="admin-input" placeholder="ex : Rafale Ambulances" />
           </Field>
-          <Field label="Slug *">
+          <Field label="Slug *" hint='Identifiant unique sans espaces, généré automatiquement depuis le titre. Ne pas modifier après création.'>
             <input required value={form.slug} onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/\s+/g, "-"))}
-              className="admin-input" placeholder="mon-projet" />
+              className="admin-input" placeholder="ex : rafale-ambulances" />
           </Field>
         </div>
-        <Field label="Description">
+        <Field label="Description" hint="Texte de présentation du projet, affiché sous « Présentation du projet ». Parle de ce que tu as fait, pour qui et pourquoi.">
           <textarea value={form.description} onChange={(e) => set("description", e.target.value)}
-            className="admin-input" rows={3} placeholder="Présentation du projet..." />
+            className="admin-input" rows={4} placeholder="J'ai réalisé... L'objectif était de..." />
         </Field>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Field label="Couleur de fond">
+          <Field label="Couleur de fond" hint="Couleur de la section du projet sur le portfolio (ex : violet pour Rafale, rose pâle pour Jumio).">
             <div className="flex gap-2 items-center">
               <input type="color" value={form.bg_color} onChange={(e) => set("bg_color", e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
               <input value={form.bg_color} onChange={(e) => set("bg_color", e.target.value)} className="admin-input flex-1" />
             </div>
           </Field>
-          <Field label="Couleur texte">
+          <Field label="Couleur du texte" hint="Couleur des textes sur fond coloré. Utilise du clair sur fond foncé et inversement.">
             <div className="flex gap-2 items-center">
               <input type="color" value={form.text_color} onChange={(e) => set("text_color", e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
               <input value={form.text_color} onChange={(e) => set("text_color", e.target.value)} className="admin-input flex-1" />
             </div>
           </Field>
-          <Field label="Ordre d'affichage">
+          <Field label="Ordre d'affichage" hint="0 = premier affiché sur le portfolio, 1 = deuxième, etc.">
             <input type="number" value={form.display_order} onChange={(e) => set("display_order", Number(e.target.value))}
               className="admin-input" min={0} />
           </Field>
         </div>
-        <div className="flex gap-6">
-          <Field label="Template">
-            <select value={form.layout} onChange={(e) => set("layout", e.target.value as ProjectLayout)} className="admin-input">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-start">
+          <Field label="Template (mise en page)" hint="Choisis le type de présentation qui correspond à ton projet.">
+            <select value={form.layout} onChange={(e) => { set("layout", e.target.value as ProjectLayout); setPendingRole(IMAGE_ROLES[e.target.value as ProjectLayout][0]); }} className="admin-input">
               {LAYOUT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
           </Field>
-          <div className="flex items-end pb-0.5">
+          <div className="flex items-end pb-0.5 pt-4">
             <label className="flex items-center gap-2 cursor-pointer font-body text-sm" style={{ color: "var(--color-blue)" }}>
               <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="w-4 h-4" />
-              Publié
+              Visible sur le portfolio
             </label>
           </div>
+        </div>
+        {/* Template preview */}
+        <div className="p-3 rounded-xl text-xs font-body leading-relaxed" style={{ backgroundColor: "rgba(9,46,103,0.05)", color: "var(--color-blue)" }}>
+          {form.layout === "identity" && "📐 Identité visuelle — Texte + palette + polices à gauche · Images superposées à droite · Mockup + pages en bas. Parfait pour un projet de branding/charte."}
+          {form.layout === "ui" && "🖥 UI / UX — Grille de 4 captures d'écran à gauche · Présentation + palette + police à droite. Parfait pour un projet digital (appli, site, PDF)."}
+          {form.layout === "print" && "🎨 Affiche / Print — Affiche + portraits à gauche · Texte + palette + police + mockup à droite. Parfait pour un projet d'affiche, édition, print."}
         </div>
       </Section>
 
       {/* Palette */}
-      <Section title="Palette de couleurs">
+      <Section
+        title="Palette de couleurs"
+        hint="Les couleurs du projet s'affichent sous forme de petits ronds animés. Tu peux en mettre autant que tu veux."
+      >
         <div className="flex flex-col gap-3">
           {form.colors.map((c, i) => (
-            <div key={i} className="flex gap-3 items-center flex-wrap">
+            <div key={i} className="flex gap-3 items-center flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
               <input type="color" value={c.gradient ? "#5acc29" : c.hex} onChange={(e) => updateColor(i, { hex: e.target.value, label: e.target.value })} className="w-10 h-10 rounded cursor-pointer border-0" />
-              <input value={c.label} onChange={(e) => updateColor(i, { label: e.target.value })} className="admin-input w-28" placeholder="Label" />
-              <input value={c.radius ?? ""} onChange={(e) => updateColor(i, { radius: e.target.value })} className="admin-input flex-1" placeholder="border-radius (ex: 50%)" />
+              <div className="flex flex-col flex-1 gap-1 min-w-[120px]">
+                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Label affiché sous le rond</label>
+                <input value={c.label} onChange={(e) => updateColor(i, { label: e.target.value })} className="admin-input" placeholder="#FFFFFF ou Gradient" />
+              </div>
+              <div className="flex flex-col flex-1 gap-1 min-w-[120px]">
+                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Forme du rond (laisse 50% par défaut)</label>
+                <input value={c.radius ?? ""} onChange={(e) => updateColor(i, { radius: e.target.value })} className="admin-input" placeholder="50%" />
+              </div>
               <label className="flex items-center gap-1.5 font-body text-xs" style={{ color: "var(--color-blue)" }}>
                 <input type="checkbox" checked={!!c.gradient} onChange={(e) => updateColor(i, { gradient: e.target.checked })} />
-                Gradient
+                C&apos;est un gradient
               </label>
-              <button type="button" onClick={() => removeColor(i)} className="text-red-500 text-xs font-body">✕</button>
+              <button type="button" onClick={() => removeColor(i)} className="text-red-500 text-xs font-body px-2 py-1 rounded hover:bg-red-50">✕ Supprimer</button>
             </div>
           ))}
           <button type="button" onClick={addColor} className="admin-btn-secondary w-fit">
@@ -222,13 +273,29 @@ export default function ProjectForm({ project }: { project?: Project }) {
       </Section>
 
       {/* Typographies */}
-      <Section title="Typographies">
+      <Section
+        title="Typographies"
+        hint="Les polices utilisées dans le projet. Le Nom s'affiche en grand sur le portfolio, la Classe CSS indique quelle police charger."
+      >
+        <div className="p-3 rounded-xl text-xs font-body leading-relaxed mb-1" style={{ backgroundColor: "rgba(9,46,103,0.05)", color: "var(--color-blue)" }}>
+          Polices disponibles dans le site :<br />
+          <strong>font-borel</strong> · <strong>font-sen</strong> · <strong>font-jost</strong> · <strong>font-barlow</strong> · <strong>font-body</strong>
+        </div>
         <div className="flex flex-col gap-3">
           {form.fonts.map((f, i) => (
-            <div key={i} className="flex gap-3 items-center">
-              <input value={f.name} onChange={(e) => updateFont(i, { name: e.target.value })} className="admin-input flex-1" placeholder="Nom (ex: Borel)" />
-              <input value={f.cssClass} onChange={(e) => updateFont(i, { cssClass: e.target.value })} className="admin-input flex-1" placeholder="Classe CSS (ex: font-borel)" />
-              <button type="button" onClick={() => removeFont(i)} className="text-red-500 text-xs font-body">✕</button>
+            <div key={i} className="flex gap-3 items-start flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
+              <div className="flex flex-col flex-1 gap-1">
+                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Nom affiché (ex : Borel, Sen, Jost…)</label>
+                <input value={f.name} onChange={(e) => updateFont(i, { name: e.target.value })} className="admin-input" placeholder="Borel" />
+              </div>
+              <div className="flex flex-col flex-1 gap-1">
+                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Classe CSS à utiliser</label>
+                <select value={f.cssClass} onChange={(e) => updateFont(i, { cssClass: e.target.value })} className="admin-input">
+                  <option value="">— Choisir —</option>
+                  {FONT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+              <button type="button" onClick={() => removeFont(i)} className="text-red-500 text-xs font-body mt-5 px-2 py-1 rounded hover:bg-red-50">✕ Supprimer</button>
             </div>
           ))}
           <button type="button" onClick={addFont} className="admin-btn-secondary w-fit">
@@ -238,48 +305,69 @@ export default function ProjectForm({ project }: { project?: Project }) {
       </Section>
 
       {/* Images */}
-      <Section title="Images">
-        <div className="flex gap-3 flex-wrap items-end mb-4">
-          <Field label="Rôle de l'image">
+      <Section
+        title="Images"
+        hint="Upload les images du projet. Choisis d'abord le rôle de l'image, puis sélectionne le fichier."
+      >
+        {/* Guide des rôles */}
+        <div className="p-3 rounded-xl text-xs font-body leading-relaxed" style={{ backgroundColor: "rgba(9,46,103,0.05)", color: "var(--color-blue)" }}>
+          <p className="font-semibold mb-1.5">Guide pour ce template ({form.layout}) :</p>
+          {IMAGE_ROLE_HELP[form.layout]}
+        </div>
+
+        <div className="flex gap-3 flex-wrap items-end mt-2">
+          <Field label="Rôle de l'image à uploader">
             <select value={pendingRole} onChange={(e) => setPendingRole(e.target.value)} className="admin-input">
               {roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </Field>
-          <Field label="Index (si multiple)">
+          <Field label="Index (si plusieurs images du même rôle, ex: portrait 0, 1, 2)">
             <input type="number" value={pendingIndex} onChange={(e) => setPendingIndex(Number(e.target.value))} className="admin-input w-20" min={0} />
           </Field>
           <div className="flex flex-col gap-1">
             <label className="font-body text-xs font-medium" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
-              Fichier image
+              Sélectionner le(s) fichier(s)
             </label>
             <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleUpload} className="font-body text-sm" disabled={uploading} />
           </div>
-          {uploading && <p className="font-body text-xs" style={{ color: "var(--color-blue)", opacity: 0.6 }}>Upload en cours…</p>}
+          {uploading && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-blue-300 border-t-blue-700 rounded-full animate-spin" />
+              <p className="font-body text-xs" style={{ color: "var(--color-blue)", opacity: 0.6 }}>Upload en cours…</p>
+            </div>
+          )}
         </div>
 
         {form.images.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            {form.images.map((img, i) => (
-              <div key={i} className="relative flex flex-col items-center gap-1">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.url} alt="" className="w-20 h-20 object-cover rounded-xl" />
-                <span className="font-body text-[10px] opacity-60" style={{ color: "var(--color-blue)" }}>
-                  {img.role}{img.index !== undefined ? ` #${img.index}` : ""}
-                </span>
-                <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                  ✕
-                </button>
-              </div>
-            ))}
+          <div>
+            <p className="font-body text-xs mb-2 mt-1" style={{ color: "var(--color-blue)", opacity: 0.5 }}>Images ajoutées ({form.images.length}) :</p>
+            <div className="flex flex-wrap gap-3">
+              {form.images.map((img, i) => (
+                <div key={i} className="relative flex flex-col items-center gap-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img.url} alt="" className="w-24 h-24 object-cover rounded-xl" />
+                  <span className="font-body text-[10px] font-medium text-center" style={{ color: "var(--color-blue)", opacity: 0.7 }}>
+                    {img.role}{img.index !== undefined ? ` #${img.index}` : ""}
+                  </span>
+                  <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </Section>
 
-      {error && <p className="font-body text-sm" style={{ color: "#b91c1c" }}>{error}</p>}
+      {error && (
+        <div className="p-3 rounded-xl font-body text-sm" style={{ backgroundColor: "#fee2e2", color: "#b91c1c" }}>
+          ⚠ {error}
+        </div>
+      )}
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 pb-4">
         <button type="submit" disabled={saving} className="admin-btn-primary disabled:opacity-50">
-          {saving ? "Sauvegarde…" : isEdit ? "Mettre à jour" : "Créer le projet"}
+          {saving ? "Sauvegarde en cours…" : isEdit ? "✓ Mettre à jour le projet" : "✓ Créer le projet"}
         </button>
         <a href="/admin" className="admin-btn-secondary">Annuler</a>
       </div>
@@ -287,19 +375,23 @@ export default function ProjectForm({ project }: { project?: Project }) {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-4 p-6 rounded-2xl" style={{ backgroundColor: "white", border: "1.5px solid rgba(9,46,103,0.1)" }}>
-      <h2 className="font-heading text-lg" style={{ color: "var(--color-blue)" }}>{title}</h2>
+      <div>
+        <h2 className="font-heading text-lg" style={{ color: "var(--color-blue)" }}>{title}</h2>
+        {hint && <p className="font-body text-xs mt-0.5 leading-relaxed" style={{ color: "var(--color-blue)", opacity: 0.5 }}>{hint}</p>}
+      </div>
       {children}
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="font-body text-xs font-medium" style={{ color: "var(--color-blue)", opacity: 0.6 }}>{label}</label>
+      {hint && <p className="font-body text-[10px] leading-snug" style={{ color: "var(--color-blue)", opacity: 0.4 }}>{hint}</p>}
       {children}
     </div>
   );
