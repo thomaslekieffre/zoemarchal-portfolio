@@ -122,6 +122,18 @@ export default function Footer() {
           </motion.div>
         </motion.div>
       </div>
+
+      <p className="text-center font-body text-[10px] mt-8 opacity-25 select-none" style={{ color: "var(--color-blue)" }}>
+        made with ♥ by{" "}
+        <a
+          href="https://github.com/thomaslekieffre"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:opacity-60 transition-opacity"
+        >
+          thomaslekieffre
+        </a>
+      </p>
     </footer>
   );
 }
