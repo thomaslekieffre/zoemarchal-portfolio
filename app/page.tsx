@@ -13,11 +13,11 @@ export default function Home() {
       <About />
       <ScallopDivider topColor="#fce4d8" bottomColor="#a17cc1" size={80} variant="down" />
       <RafaleProject />
-      <ScallopDivider topColor="#a17cc1" bottomColor="#fce4d8" size={80} variant="down" />
+      <ScallopDivider topColor="#a17cc1" bottomColor="#fce4d8" size={80} variant="down" reverse />
       <JumioProject />
       <ScallopDivider topColor="#fce4d8" bottomColor="#092E67" size={80} variant="down" />
       <MainsquareProject />
-      <ScallopDivider topColor="#092E67" bottomColor="#fce4d8" size={80} variant="down" />
+      <ScallopDivider topColor="#092E67" bottomColor="#fce4d8" size={80} variant="down" reverse />
       <Footer />
     </main>
   );

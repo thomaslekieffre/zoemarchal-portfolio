@@ -6,6 +6,7 @@ interface Props {
   size?: number;
   variant?: "down" | "up" | "bubbles";
   bubbleColor?: string;
+  reverse?: boolean;
 }
 
 export default function ScallopDivider({
@@ -14,12 +15,14 @@ export default function ScallopDivider({
   size = 40,
   variant = "down",
   bubbleColor,
+  reverse = false,
 }: Props) {
   const step = size * 2;
+  const animName = reverse ? "scallop-wave-ltr" : "scallop-wave-rtl";
   const baseStyle: React.CSSProperties = {
     backgroundSize: `${step}px 100%`,
     backgroundRepeat: "repeat-x",
-    animation: `scallop-wave 3s linear infinite`,
+    animation: `${animName} 3s linear infinite`,
     ["--scallop-step" as string]: `${step}px`,
   };
 
