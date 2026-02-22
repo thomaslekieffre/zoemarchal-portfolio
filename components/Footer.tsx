@@ -66,7 +66,7 @@ export default function Footer() {
                   href={c.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm transition-opacity hover:opacity-70"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm footer-chip"
                   style={{
                     border: "1.5px solid var(--color-blue)",
                     color: "var(--color-blue)",
@@ -85,7 +85,7 @@ export default function Footer() {
                   href={c.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm transition-opacity hover:opacity-70"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-body text-sm footer-chip"
                   style={{
                     border: "1.5px solid var(--color-blue)",
                     color: "var(--color-blue)",

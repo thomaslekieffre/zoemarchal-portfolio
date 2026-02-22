@@ -159,6 +159,18 @@ body {
   white-space: nowrap;
 }
 
+.footer-chip {
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transform-origin: left center;
+}
+
+.footer-chip:hover {
+  transform: scaleX(0.9);
+  border-color: #ED739A !important;
+  color: #ED739A !important;
+}
+
 .chip-lg {
   display: inline-flex;
   align-items: center;

@@ -174,7 +174,7 @@ export default function About() {
                 <div className="flex flex-col gap-2">
                   {contacts.map((c, i) => (
                     <a key={i} href={c.href} target="_blank" rel="noopener noreferrer"
-                      className="font-body text-sm w-fit px-3 py-1 rounded-full inline-flex items-center gap-1.5 cursor-pointer transition-opacity hover:opacity-70"
+                      className="font-body text-sm w-fit px-3 py-1 rounded-full inline-flex items-center gap-1.5 cursor-pointer transition-all duration-200 hover:scale-95 hover:border-[#a17cc1] hover:text-[#a17cc1]"
                       style={{ border: "1.5px solid var(--color-blue)", color: "var(--color-blue)" }}>
                       {c.icon} {c.label}
                     </a>
