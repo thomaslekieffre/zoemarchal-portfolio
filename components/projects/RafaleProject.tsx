@@ -13,17 +13,17 @@ const COLORS = [
 ];
 
 function ProjectImg({
-  src, alt, placeholder, style, rotation = 0,
+  src, alt, placeholder, style, rotation = 0, objectFit = "cover",
 }: {
   src: string; alt: string; placeholder: string;
-  style?: React.CSSProperties; rotation?: number;
+  style?: React.CSSProperties; rotation?: number; objectFit?: "cover" | "contain";
 }) {
   return (
     <div
       className="relative overflow-hidden rounded-2xl shadow-xl"
       style={{ ...style, transform: `rotate(${rotation}deg)`, transformOrigin: "center" }}
     >
-      <Image src={src} alt={alt} fill className="object-cover" sizes="400px"
+      <Image src={src} alt={alt} fill className={objectFit === "contain" ? "object-contain" : "object-cover"} sizes="400px"
         onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
       <div className="absolute inset-0 flex items-center justify-center">
@@ -153,7 +153,7 @@ export default function RafaleProject() {
             >
               <ProjectImg
                 src="/projects/rafale/rafale1.png" alt="Rafale site" placeholder="rafale1.png"
-                style={{ width: "100%", height: "100%" }} rotation={-4}
+                style={{ width: "100%", height: "100%" }} rotation={-4} objectFit="contain"
               />
             </motion.div>
 
@@ -168,7 +168,7 @@ export default function RafaleProject() {
             >
               <ProjectImg
                 src="/projects/rafale/rafale3.png" alt="Rafale formulaire" placeholder="rafale3.png"
-                style={{ width: "100%", height: "100%" }} rotation={5}
+                style={{ width: "100%", height: "100%" }} rotation={5} objectFit="contain"
               />
             </motion.div>
           </div>
@@ -186,7 +186,7 @@ export default function RafaleProject() {
           <div style={{ flex: "1.55", aspectRatio: "429/277" }}>
             <ProjectImg
               src="/projects/rafale/mockup_rafale.png" alt="Laptop mockup Rafale" placeholder="mockup_rafale.png"
-              style={{ width: "100%", height: "100%" }} rotation={0}
+              style={{ width: "100%", height: "100%" }} rotation={0} objectFit="contain"
             />
           </div>
           {/* Rafale 5 */}
