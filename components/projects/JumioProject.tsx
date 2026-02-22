@@ -49,19 +49,19 @@ export default function JumioProject() {
           style={{ maxWidth: 500, minWidth: "min(300px, 100%)" }}
         >
           <ProjectImg
-            src="/images/jumiop1.png" alt="Jumio couverture" placeholder="jumiop1.png"
+            src="/projects/jumio/jumiop1.png" alt="Jumio couverture" placeholder="jumiop1.png"
             style={{ width: "100%", aspectRatio: "3/4" }} rotation={-1}
           />
           <ProjectImg
-            src="/images/jumiop2.png" alt="Jumio documents" placeholder="jumiop2.png"
+            src="/projects/jumio/jumiop2.png" alt="Jumio documents" placeholder="jumiop2.png"
             style={{ width: "100%", aspectRatio: "3/4" }} rotation={1}
           />
           <ProjectImg
-            src="/images/jumiop3.png" alt="Jumio National ID" placeholder="jumiop3.png"
+            src="/projects/jumio/jumiop3.png" alt="Jumio National ID" placeholder="jumiop3.png"
             style={{ width: "100%", aspectRatio: "3/4" }} rotation={1}
           />
           <ProjectImg
-            src="/images/jumiop4.png" alt="Jumio page" placeholder="jumiop4.png"
+            src="/projects/jumio/jumiop4.png" alt="Jumio page" placeholder="jumiop4.png"
             style={{ width: "100%", aspectRatio: "3/4" }} rotation={-1}
           />
         </motion.div>
