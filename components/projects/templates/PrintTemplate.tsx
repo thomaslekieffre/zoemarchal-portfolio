@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function Img({
   src, alt, style, className,
@@ -22,6 +23,7 @@ function Img({
 }
 
 export default function PrintTemplate({ project }: { project: Project }) {
+  const { t } = useLanguage();
   const heroImg = project.images.find((i) => i.role === "hero");
   const portraits = project.images.filter((i) => i.role === "portrait").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const mockupImg = project.images.find((i) => i.role === "mockup");
@@ -78,9 +80,9 @@ export default function PrintTemplate({ project }: { project: Project }) {
 
               {project.description && (
                 <div className="flex flex-col gap-1.5">
-                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
-                    Présentation du projet
-                  </p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
+                  {t.projects.presentation}
+                </p>
                   <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.8 }}>
                     {project.description}
                   </p>
@@ -89,7 +91,7 @@ export default function PrintTemplate({ project }: { project: Project }) {
 
               {project.colors.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Palette de couleurs</p>
+                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
                   <div className="flex gap-3 flex-wrap">
                     {project.colors.map((c) => (
                       <div key={c.hex} className="flex flex-col items-center gap-1">
@@ -105,7 +107,7 @@ export default function PrintTemplate({ project }: { project: Project }) {
 
               {project.fonts.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographie</p>
+                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.typography}</p>
                   {project.fonts.map((f) => {
                     const fontStyle = f.fontUrl ? { fontFamily: `"${f.name}"` } : {};
                     const cls = f.fontUrl ? "" : f.cssClass;

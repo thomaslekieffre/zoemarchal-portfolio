@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import ScrollIndicator from "./ScrollIndicator";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
     <section
       className="relative w-full overflow-hidden"
@@ -82,7 +84,7 @@ export default function Hero() {
           >
             <span className="text-lg sm:text-2xl md:text-3xl">Marchal Zoé</span>
             <span className="text-2xl sm:text-3xl md:text-4xl">❉</span>
-            <span className="text-lg sm:text-2xl md:text-3xl">Graphic Designer</span>
+            <span className="text-lg sm:text-2xl md:text-3xl">{t.hero.subtitle}</span>
           </motion.div>
 
         </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function ProjectImg({
   src, alt, style, rotation = 0,
@@ -25,6 +26,7 @@ function ProjectImg({
 }
 
 export default function UiTemplate({ project }: { project: Project }) {
+  const { t } = useLanguage();
   const gridImages = project.images.filter((i) => i.role === "grid").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
   return (
@@ -68,7 +70,7 @@ export default function UiTemplate({ project }: { project: Project }) {
           {project.description && (
             <div className="flex flex-col gap-1.5">
               <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
-                Présentation du projet
+                {t.projects.presentation}
               </p>
               <p className="font-body text-sm leading-relaxed max-w-[320px]" style={{ color: project.text_color }}>
                 {project.description}
@@ -78,7 +80,7 @@ export default function UiTemplate({ project }: { project: Project }) {
 
           {project.colors.length > 0 && (
             <div className="flex flex-col gap-2">
-              <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Palette de couleurs</p>
+              <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
               <div className="flex gap-3 flex-wrap">
                 {project.colors.map((c) => (
                   <div key={c.label} className="flex flex-col items-center gap-1">
@@ -100,7 +102,7 @@ export default function UiTemplate({ project }: { project: Project }) {
 
           {project.fonts.length > 0 && (
             <div className="flex flex-col gap-3">
-              <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographie</p>
+              <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.typography}</p>
               {project.fonts.map((f) => {
                 const fontStyle = f.fontUrl ? { fontFamily: `"${f.name}"` } : {};
                 const cls = f.fontUrl ? "" : f.cssClass;

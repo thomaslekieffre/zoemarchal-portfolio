@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function ProjectImg({
   src, alt, style, rotation = 0, objectFit = "cover",
@@ -33,6 +34,7 @@ export default function IdentityTemplate({
   project: Project;
   showHeader?: boolean;
 }) {
+  const { t } = useLanguage();
   const overlayImages = project.images.filter((i) => i.role === "overlay").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const bottomImages = project.images.filter((i) => i.role === "bottom").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
@@ -49,7 +51,7 @@ export default function IdentityTemplate({
           >
             <div className="w-fit">
               <h2 className="font-heading" style={{ fontSize: "clamp(24px, 2.5vw, 36px)", color: project.text_color }}>
-                Mes projets
+                {t.projects.my_projects}
               </h2>
               <WavyUnderline width="100%" height={8} />
             </div>
@@ -80,7 +82,7 @@ export default function IdentityTemplate({
             {project.description && (
               <div className="flex flex-col gap-1.5">
                 <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
-                  Présentation du projet
+                  {t.projects.presentation}
                 </p>
                 <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color }}>
                   {project.description}
@@ -90,7 +92,7 @@ export default function IdentityTemplate({
 
             {project.colors.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Palette de couleurs</p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
                 <div className="flex gap-3 flex-wrap">
                   {project.colors.map((c) => (
                     <div key={c.label} className="flex flex-col items-center gap-1">
@@ -112,7 +114,7 @@ export default function IdentityTemplate({
 
             {project.fonts.length > 0 && (
               <div className="flex flex-col gap-4">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographies</p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.typographies}</p>
                 {project.fonts.map((f) => {
                   const fontStyle = f.fontUrl ? { fontFamily: `"${f.name}"` } : {};
                   const cls = f.fontUrl ? "" : f.cssClass;

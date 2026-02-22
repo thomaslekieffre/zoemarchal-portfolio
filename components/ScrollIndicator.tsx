@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function ScrollIndicator() {
+  const { t } = useLanguage();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -14,7 +16,7 @@ export default function ScrollIndicator() {
         className="font-body text-xs tracking-widest uppercase"
         style={{ color: "var(--color-peach)", opacity: 0.6 }}
       >
-        Scroll
+        {t.scroll}
       </span>
       <motion.div
         animate={{ y: [0, 8, 0] }}

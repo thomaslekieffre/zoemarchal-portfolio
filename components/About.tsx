@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { Instagram, Pencil, Dribbble, Music } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function DiscordIcon({ size = 14 }: { size?: number }) {
   return (
@@ -21,24 +22,6 @@ function XIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-const experiences = [
-  {
-    label: "Février 2026 – Affinity",
-    description:
-      "Stage en design produit et branding\n• Contribution à la mise en place d'un Design System\n• Approfondissement de supports marketing pour la marque",
-  },
-  {
-    label: "Juillet 2025 – Jumio",
-    description:
-      "Stage en communication visuelle\n• Conception d'un support PDF présentant les capacités du produit\n• Structuration de l'information et hiérarchisation graphique",
-  },
-  {
-    label: "Juin 2024 – Agence Keeo",
-    description:
-      "Stage en design digital\n• Conception d'une maquette de site web\n• Création d'un logo et déclinaisons visuelles\n• Approfondissement des outils UI sur Figma",
-  },
-];
-
 const contacts = [
   { icon: <Instagram size={14} strokeWidth={2.5} />, label: "@zozoriginale", href: "https://instagram.com/zozoriginale" },
   { icon: <DiscordIcon size={14} />, label: "zoe.marchal", href: "#" },
@@ -55,6 +38,21 @@ const fadeUp = {
 };
 
 export default function About() {
+  const { t } = useLanguage();
+  const ta = t.about;
+
+  const experiences = [
+    { label: ta.exp1_label, description: ta.exp1_desc },
+    { label: ta.exp2_label, description: ta.exp2_desc },
+    { label: ta.exp3_label, description: ta.exp3_desc },
+  ];
+
+  const interests = [
+    { icon: <Pencil size={14} strokeWidth={2.5} />, label: ta.interest_drawing },
+    { icon: <Dribbble size={14} strokeWidth={2.5} />, label: ta.interest_basketball },
+    { icon: <Music size={14} strokeWidth={2.5} />, label: ta.interest_music },
+  ];
+
   return (
     <section className="w-full overflow-hidden" style={{ backgroundColor: "var(--color-peach)" }}>
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-16 py-10 sm:py-14 flex flex-col gap-8 sm:gap-10">
@@ -90,25 +88,15 @@ export default function About() {
           {/* Salut + bio */}
           <motion.div custom={0} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
             className="flex-1">
-            <SectionTitle size="lg">Salut !</SectionTitle>
+            <SectionTitle size="lg">{ta.greeting}</SectionTitle>
             <p className="font-body text-sm md:text-base leading-relaxed mt-3 max-w-prose" style={{ color: "#092e67" }}>
-              Je m&apos;appelle Zoé Marchal, j&apos;ai 17 ans.
-              Actuellement en terminale au lycée Henri Wallon de
-              Valenciennes, je me forme au design en autodidacte.
-              Je travaille aussi bien l&apos;identité visuelle que l&apos;affiche, l&apos;édition, l&apos;UI
-              ou l&apos;expérimentation typographique. J&apos;aime explorer des univers
-              colorés, tout en sachant m&apos;adapter à des projets plus sobres et
-              structurés.
+              {ta.bio1}
             </p>
             <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "#092e67" }}>
-              Chaque projet est pour moi un équilibre entre concept et
-              esthétique. Je recherche une direction forte, une cohérence
-              visuelle et une intention claire derrière chaque choix visuel.
+              {ta.bio2}
             </p>
             <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "#092e67" }}>
-              Après le lycée, je souhaite intégrer une formation en design
-              graphique afin d&apos;approfondir ma pratique et de faire évoluer
-              cette démarche créative vers un cadre professionnel.
+              {ta.bio3}
             </p>
           </motion.div>
         </div>
@@ -119,7 +107,7 @@ export default function About() {
           {/* Colonne gauche : Expériences */}
           <motion.div custom={1} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
             className="flex flex-col gap-3">
-            <SectionTitle>Expériences professionnelles</SectionTitle>
+            <SectionTitle>{ta.experiences}</SectionTitle>
             {experiences.map((exp, i) => (
               <div key={i} className="flex flex-col gap-0.5">
                 <span className="font-body text-sm w-fit px-3 py-1 rounded-full inline-flex items-center"
@@ -140,12 +128,12 @@ export default function About() {
             {/* Scolarité */}
             <motion.div custom={2} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
               className="flex flex-col gap-2">
-              <SectionTitle>Scolarité</SectionTitle>
+              <SectionTitle>{ta.education}</SectionTitle>
               <span className="font-body text-sm opacity-60" style={{ color: "#092e67" }}>
-                Baccalauréat Général
+                {ta.edu_degree}
               </span>
               <p className="font-body text-sm mt-1" style={{ color: "#092e67" }}>
-                Mathématiques &amp; Numériques et Sciences Informatiques (NSI)
+                {ta.edu_subjects}
               </p>
             </motion.div>
 
@@ -155,10 +143,9 @@ export default function About() {
               {/* Centres d'intérêts */}
               <motion.div custom={3} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 className="flex flex-col gap-2">
-                <SectionTitle>Centres d&apos;intérêts</SectionTitle>
+                <SectionTitle>{ta.interests}</SectionTitle>
                 <div className="flex flex-col gap-2">
-                  {[{ icon: <Pencil size={14} strokeWidth={2.5} />, label: "Dessin" }, { icon: <Dribbble size={14} strokeWidth={2.5} />, label: "Basket-ball" }, { icon: <Music size={14} strokeWidth={2.5} />, label: "Musique" }]
-                    .map((item, i) => (
+                  {interests.map((item, i) => (
                       <span key={i} className="font-body text-sm w-fit px-3 py-1 rounded-full inline-flex items-center gap-1.5"
                         style={{ border: "1.5px solid var(--color-blue)", color: "var(--color-blue)" }}>
                         {item.icon} {item.label}
@@ -170,7 +157,7 @@ export default function About() {
               {/* Contact */}
               <motion.div custom={4} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 className="flex flex-col gap-2">
-                <SectionTitle>Contact</SectionTitle>
+                <SectionTitle>{ta.contact}</SectionTitle>
                 <div className="flex flex-col gap-2">
                   {contacts.map((c, i) => (
                     <a key={i} href={c.href} target="_blank" rel="noopener noreferrer"

@@ -4,8 +4,10 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function GalleryTemplate({ project }: { project: Project }) {
+  const { t } = useLanguage();
   const images = project.images.filter((i) => i.role === "image").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const heroImg = project.images.find((i) => i.role === "hero");
 
@@ -31,7 +33,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
 
             {project.description && (
               <div className="flex flex-col gap-1.5">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Présentation du projet</p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.presentation}</p>
                 <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.85 }}>
                   {project.description}
                 </p>
@@ -48,7 +50,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
           >
             {project.colors.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Palette de couleurs</p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
                 <div className="flex gap-3 flex-wrap">
                   {project.colors.map((c) => (
                     <div key={c.label} className="flex flex-col items-center gap-1">
@@ -68,7 +70,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
 
             {project.fonts.length > 0 && (
               <div className="flex flex-col gap-3">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographies</p>
+                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.typographies}</p>
                 {project.fonts.map((f) => (
                   <div key={f.name} className="flex flex-col gap-0.5">
                     <span className={f.cssClass || "font-body"} style={{ fontSize: 20, color: project.text_color }}>{f.name}</span>
