@@ -129,7 +129,7 @@ export default function Footer() {
           href="https://github.com/thomaslekieffre"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:opacity-60 transition-opacity"
+          className="underline hover:opacity-100 transition-opacity"
         >
           thomaslekieffre
         </a>
