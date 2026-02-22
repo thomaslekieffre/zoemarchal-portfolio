@@ -24,7 +24,7 @@ function Img({
       <Image src={src} alt={alt} fill className="object-cover"
         onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
-      <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#0e3d80" }}>
+      <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-xs opacity-20 text-center px-2 font-sen" style={{ color: "#EA9230" }}>
           {fallback}
         </span>
@@ -51,7 +51,7 @@ export default function MainsquareProject() {
               transition={{ duration: 0.6 }}
             >
               <Img
-                src="/images/affiche.png" alt="Affiche Mainsquare" fallback="affiche.png"
+                src="/projects/mainsquare/affiche.png" alt="Affiche Mainsquare" fallback="affiche.png"
                 style={{ width: "100%", aspectRatio: "367/542" }}
               />
             </motion.div>
@@ -67,7 +67,7 @@ export default function MainsquareProject() {
               {["p1.png", "p2.png", "p3.png"].map((name) => (
                 <Img
                   key={name}
-                  src={`/images/${name}`} alt={`Mainsquare ${name}`} fallback={name}
+                  src={`/projects/mainsquare/${name}`} alt={`Mainsquare ${name}`} fallback={name}
                   style={{ width: "100%", aspectRatio: "3/4" }}
                 />
               ))}
@@ -145,7 +145,7 @@ export default function MainsquareProject() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <Img
-                src="/images/mockup.png" alt="Mainsquare mockup" fallback="mockup.png"
+                src="/projects/mainsquare/mockup.png" alt="Mainsquare mockup" fallback="mockup.png"
                 style={{ width: "100%", aspectRatio: "549/411" }}
               />
             </motion.div>
