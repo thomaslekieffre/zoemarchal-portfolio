@@ -113,20 +113,24 @@ export default function IdentityTemplate({
             {project.fonts.length > 0 && (
               <div className="flex flex-col gap-4">
                 <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographies</p>
-                {project.fonts.map((f) => (
-                  <div key={f.name} className="flex flex-col gap-0.5">
-                    <span className={`${f.cssClass} font-bold`} style={{ fontSize: 22, color: project.text_color }}>{f.name}</span>
-                    <p className={`${f.cssClass} text-xs opacity-40 leading-snug`} style={{ color: project.text_color }}>
-                      A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-                    </p>
-                    <p className={`${f.cssClass} text-xs opacity-40 leading-snug`} style={{ color: project.text_color }}>
-                      a b c d e f g h i j k l m n o p q r s t u v w x y z
-                    </p>
-                    <p className={`${f.cssClass} text-xs opacity-40`} style={{ color: project.text_color }}>
-                      1 2 3 4 5 6 7 8 9 0
-                    </p>
-                  </div>
-                ))}
+                {project.fonts.map((f) => {
+                  const fontStyle = f.fontUrl ? { fontFamily: `"${f.name}"` } : {};
+                  const cls = f.fontUrl ? "" : f.cssClass;
+                  return (
+                    <div key={f.name} className="flex flex-col gap-0.5">
+                      <span className={`${cls} font-bold`} style={{ fontSize: 22, color: project.text_color, ...fontStyle }}>{f.name}</span>
+                      <p className={`${cls} text-xs opacity-40 leading-snug`} style={{ color: project.text_color, ...fontStyle }}>
+                        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+                      </p>
+                      <p className={`${cls} text-xs opacity-40 leading-snug`} style={{ color: project.text_color, ...fontStyle }}>
+                        a b c d e f g h i j k l m n o p q r s t u v w x y z
+                      </p>
+                      <p className={`${cls} text-xs opacity-40`} style={{ color: project.text_color, ...fontStyle }}>
+                        1 2 3 4 5 6 7 8 9 0
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </motion.div>

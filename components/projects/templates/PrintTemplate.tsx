@@ -106,22 +106,26 @@ export default function PrintTemplate({ project }: { project: Project }) {
               {project.fonts.length > 0 && (
                 <div className="flex flex-col gap-3">
                   <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>Typographie</p>
-                  {project.fonts.map((f) => (
-                    <div key={f.name} className="flex flex-col gap-1">
-                      <span className={`${f.cssClass} font-bold uppercase`} style={{ fontSize: 16, color: project.text_color, letterSpacing: "0.05em" }}>
-                        {f.name}
-                      </span>
-                      <p className={`${f.cssClass} font-bold uppercase text-xs opacity-50 leading-snug`} style={{ color: project.text_color, letterSpacing: "0.05em" }}>
-                        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-                      </p>
-                      <p className={`${f.cssClass} font-bold uppercase text-xs opacity-50 leading-snug`} style={{ color: project.text_color, letterSpacing: "0.05em" }}>
-                        a b c d e f g h i j k l m n o p q r s t u v w x y z
-                      </p>
-                      <p className={`${f.cssClass} font-bold uppercase text-xs opacity-50`} style={{ color: project.text_color, letterSpacing: "0.05em" }}>
-                        1 2 3 4 5 6 7 8 9 0
-                      </p>
-                    </div>
-                  ))}
+                  {project.fonts.map((f) => {
+                    const fontStyle = f.fontUrl ? { fontFamily: `"${f.name}"` } : {};
+                    const cls = f.fontUrl ? "" : f.cssClass;
+                    return (
+                      <div key={f.name} className="flex flex-col gap-1">
+                        <span className={`${cls} font-bold uppercase`} style={{ fontSize: 16, color: project.text_color, letterSpacing: "0.05em", ...fontStyle }}>
+                          {f.name}
+                        </span>
+                        <p className={`${cls} font-bold uppercase text-xs opacity-50 leading-snug`} style={{ color: project.text_color, letterSpacing: "0.05em", ...fontStyle }}>
+                          A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+                        </p>
+                        <p className={`${cls} font-bold uppercase text-xs opacity-50 leading-snug`} style={{ color: project.text_color, letterSpacing: "0.05em", ...fontStyle }}>
+                          a b c d e f g h i j k l m n o p q r s t u v w x y z
+                        </p>
+                        <p className={`${cls} font-bold uppercase text-xs opacity-50`} style={{ color: project.text_color, letterSpacing: "0.05em", ...fontStyle }}>
+                          1 2 3 4 5 6 7 8 9 0
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </motion.div>

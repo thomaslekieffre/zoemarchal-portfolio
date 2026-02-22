@@ -5,15 +5,21 @@ import { useRouter } from "next/navigation";
 import type { Project, ProjectColor, ProjectFont, ProjectImage, ProjectLayout } from "@/lib/supabase/types";
 
 const LAYOUT_OPTIONS: { value: ProjectLayout; label: string }[] = [
-  { value: "identity", label: "Identité visuelle (style Rafale)" },
-  { value: "ui", label: "UI / UX (style Jumio)" },
-  { value: "print", label: "Affiche / Print (style Mainsquare)" },
+  { value: "identity", label: "Identité visuelle — texte + palette + polices à gauche, images à droite" },
+  { value: "ui", label: "UI / UX — grille de captures d'écran à gauche, info à droite" },
+  { value: "print", label: "Affiche / Print — affiche + portraits à gauche, mockup à droite" },
+  { value: "gallery", label: "Galerie — grille d'images libre (illustration, photo, packaging…)" },
+  { value: "motion", label: "Motion / Vidéo — grille de captures ou thumbnails" },
+  { value: "editorial", label: "Éditorial / Livre — grille de pages ou spreads" },
 ];
 
 const IMAGE_ROLES: Record<ProjectLayout, string[]> = {
   identity: ["overlay", "bottom"],
   ui: ["grid"],
   print: ["hero", "portrait", "mockup"],
+  gallery: ["hero", "image"],
+  motion: ["hero", "image"],
+  editorial: ["hero", "image"],
 };
 
 type FormState = {
@@ -67,7 +73,9 @@ export default function ProjectForm({ project }: { project?: Project }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadingFont, setUploadingFont] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const fontFileRef = useRef<HTMLInputElement>(null);
   const [pendingRole, setPendingRole] = useState<string>("hero");
   const [pendingIndex, setPendingIndex] = useState<number>(0);
 
@@ -88,13 +96,28 @@ export default function ProjectForm({ project }: { project?: Project }) {
 
   // Fonts
   function addFont() {
-    set("fonts", [...form.fonts, { name: "", cssClass: "" }]);
+    set("fonts", [...form.fonts, { name: "", cssClass: "font-custom", fontUrl: "" }]);
   }
   function updateFont(i: number, patch: Partial<ProjectFont>) {
     set("fonts", form.fonts.map((f, idx) => idx === i ? { ...f, ...patch } : f));
   }
   function removeFont(i: number) {
     set("fonts", form.fonts.filter((_, idx) => idx !== i));
+  }
+
+  async function handleFontUpload(e: React.ChangeEvent<HTMLInputElement>, fontIndex: number) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingFont(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/api/admin/upload-font", { method: "POST", body: fd });
+    if (res.ok) {
+      const { url, name } = await res.json();
+      updateFont(fontIndex, { fontUrl: url, name: form.fonts[fontIndex].name || name, cssClass: "font-custom" });
+    }
+    setUploadingFont(false);
+    if (fontFileRef.current) fontFileRef.current.value = "";
   }
 
   // Images upload
@@ -169,6 +192,24 @@ export default function ProjectForm({ project }: { project?: Project }) {
         <li><strong>mockup</strong> — le mockup final (colonne droite, en bas)</li>
       </ul>
     ),
+    gallery: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>hero</strong> — image principale pleine largeur (optionnelle)</li>
+        <li><strong>image</strong> (index 0, 1, 2…) — images de la grille, dans l'ordre</li>
+      </ul>
+    ),
+    motion: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>hero</strong> — thumbnail/capture principale (optionnelle)</li>
+        <li><strong>image</strong> (index 0, 1, 2…) — captures ou thumbnails dans l'ordre</li>
+      </ul>
+    ),
+    editorial: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>hero</strong> — couverture ou spread principal (optionnel)</li>
+        <li><strong>image</strong> (index 0, 1, 2…) — pages ou spreads dans l'ordre</li>
+      </ul>
+    ),
   };
 
   const FONT_OPTIONS = [
@@ -236,9 +277,12 @@ export default function ProjectForm({ project }: { project?: Project }) {
         </div>
         {/* Template preview */}
         <div className="p-3 rounded-xl text-xs font-body leading-relaxed" style={{ backgroundColor: "rgba(9,46,103,0.05)", color: "var(--color-blue)" }}>
-          {form.layout === "identity" && "📐 Identité visuelle — Texte + palette + polices à gauche · Images superposées à droite · Mockup + pages en bas. Parfait pour un projet de branding/charte."}
-          {form.layout === "ui" && "🖥 UI / UX — Grille de 4 captures d'écran à gauche · Présentation + palette + police à droite. Parfait pour un projet digital (appli, site, PDF)."}
-          {form.layout === "print" && "🎨 Affiche / Print — Affiche + portraits à gauche · Texte + palette + police + mockup à droite. Parfait pour un projet d'affiche, édition, print."}
+          {form.layout === "identity" && "📐 Texte + palette + polices à gauche · Images superposées à droite · Mockup + pages en bas. Parfait pour un projet de branding/charte graphique."}
+          {form.layout === "ui" && "🖥 Grille de 4 captures d'écran à gauche · Présentation + palette + police à droite. Parfait pour un projet digital (appli, site, PDF)."}
+          {form.layout === "print" && "🎨 Affiche + portraits à gauche · Texte + palette + police + mockup à droite. Parfait pour une affiche, de l'édition, du print."}
+          {form.layout === "gallery" && "🖼 Header avec titre + description + palette · Puis image hero pleine largeur + grille d'images libre. Parfait pour de l'illustration, packaging, photo…"}
+          {form.layout === "motion" && "🎬 Même mise en page que Galerie. Upload des thumbnails ou captures de tes vidéos/animations."}
+          {form.layout === "editorial" && "📖 Même mise en page que Galerie. Upload des scans ou photos de pages, spreads, livres…"}
         </div>
       </Section>
 
@@ -275,27 +319,60 @@ export default function ProjectForm({ project }: { project?: Project }) {
       {/* Typographies */}
       <Section
         title="Typographies"
-        hint="Les polices utilisées dans le projet. Le Nom s'affiche en grand sur le portfolio, la Classe CSS indique quelle police charger."
+        hint="Les polices affichées dans la section du projet. Tu peux utiliser les polices déjà intégrées au site, ou uploader une police personnalisée (TTF, OTF, WOFF, WOFF2)."
       >
         <div className="p-3 rounded-xl text-xs font-body leading-relaxed mb-1" style={{ backgroundColor: "rgba(9,46,103,0.05)", color: "var(--color-blue)" }}>
-          Polices disponibles dans le site :<br />
-          <strong>font-borel</strong> · <strong>font-sen</strong> · <strong>font-jost</strong> · <strong>font-barlow</strong> · <strong>font-body</strong>
+          <strong>Polices intégrées :</strong> font-borel · font-sen · font-jost · font-barlow · font-body<br />
+          <strong>Police perso :</strong> uploade ton fichier de police — elle sera chargée automatiquement sur le portfolio.
         </div>
         <div className="flex flex-col gap-3">
           {form.fonts.map((f, i) => (
-            <div key={i} className="flex gap-3 items-start flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
-              <div className="flex flex-col flex-1 gap-1">
-                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Nom affiché (ex : Borel, Sen, Jost…)</label>
-                <input value={f.name} onChange={(e) => updateFont(i, { name: e.target.value })} className="admin-input" placeholder="Borel" />
+            <div key={i} className="flex flex-col gap-3 p-4 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
+              <div className="flex gap-3 items-start flex-wrap">
+                <div className="flex flex-col flex-1 gap-1 min-w-[140px]">
+                  <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Nom affiché (ex : Borel, Ma police…)</label>
+                  <input value={f.name} onChange={(e) => updateFont(i, { name: e.target.value })} className="admin-input" placeholder="Nom de la police" />
+                </div>
+                <div className="flex flex-col flex-1 gap-1 min-w-[140px]">
+                  <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Police intégrée (laisser vide si perso)</label>
+                  <select value={f.fontUrl ? "" : f.cssClass} onChange={(e) => updateFont(i, { cssClass: e.target.value, fontUrl: "" })} className="admin-input" disabled={!!f.fontUrl}>
+                    <option value="">— Choisir une police intégrée —</option>
+                    {FONT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
+                <button type="button" onClick={() => removeFont(i)} className="text-red-500 text-xs font-body mt-5 px-2 py-1 rounded hover:bg-red-50">✕</button>
               </div>
-              <div className="flex flex-col flex-1 gap-1">
-                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Classe CSS à utiliser</label>
-                <select value={f.cssClass} onChange={(e) => updateFont(i, { cssClass: e.target.value })} className="admin-input">
-                  <option value="">— Choisir —</option>
-                  {FONT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
+
+              {/* Upload police perso */}
+              <div className="flex flex-col gap-1.5">
+                <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>
+                  OU uploader ta propre police (TTF / OTF / WOFF / WOFF2)
+                </label>
+                {f.fontUrl ? (
+                  <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: "rgba(9,46,103,0.08)" }}>
+                    <span className="font-body text-xs flex-1 truncate" style={{ color: "var(--color-blue)" }}>
+                      ✓ Police uploadée
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => updateFont(i, { fontUrl: "", cssClass: "font-body" })}
+                      className="text-red-500 text-xs font-body px-2 py-0.5 rounded hover:bg-red-50"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                ) : (
+                  <input
+                    ref={fontFileRef}
+                    type="file"
+                    accept=".ttf,.otf,.woff,.woff2"
+                    onChange={(e) => handleFontUpload(e, i)}
+                    className="font-body text-xs"
+                    disabled={uploadingFont}
+                  />
+                )}
+                {uploadingFont && <p className="font-body text-xs opacity-60" style={{ color: "var(--color-blue)" }}>Upload en cours…</p>}
               </div>
-              <button type="button" onClick={() => removeFont(i)} className="text-red-500 text-xs font-body mt-5 px-2 py-1 rounded hover:bg-red-50">✕ Supprimer</button>
             </div>
           ))}
           <button type="button" onClick={addFont} className="admin-btn-secondary w-fit">

@@ -1,4 +1,4 @@
-export type ProjectLayout = "identity" | "ui" | "print";
+export type ProjectLayout = "identity" | "ui" | "print" | "gallery" | "motion" | "editorial";
 
 export type ProjectColor = {
   hex: string;
@@ -10,6 +10,8 @@ export type ProjectColor = {
 export type ProjectFont = {
   name: string;
   cssClass: string;
+  /** URL vers un fichier de police uploadé dans Supabase Storage */
+  fontUrl?: string;
 };
 
 export type ProjectImage = {
