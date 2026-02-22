@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BackToTop from "@/components/BackToTop";
 import {
   Borel,
   Sen,
@@ -72,6 +73,7 @@ export default function RootLayout({
         className={`${dmSans.variable} ${righteous.variable} ${nunito.variable} ${sen.variable} ${borel.variable} ${jost.variable} ${barlowCondensed.variable}`}
       >
         {children}
+        <BackToTop />
       </body>
     </html>
   );
