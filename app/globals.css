@@ -1,26 +1,175 @@
 @import "tailwindcss";
 
+/* ─── Config Tailwind v4 (thème CSS-first) ───────────────────────────── */
+@theme {
+  --font-family-display: "Dont", var(--font-righteous), cursive;
+  --font-family-body: "PP Frama", var(--font-dm-sans), sans-serif;
+  --font-family-heading: "CocogooseProTrial", var(--font-nunito), sans-serif;
+  --font-family-sen: var(--font-sen), sans-serif;
+  --font-family-borel: var(--font-borel), cursive;
+  --font-family-jost: var(--font-jost), sans-serif;
+  --font-family-barlow: var(--font-barlow), "Barlow Condensed", sans-serif;
+
+  --color-blue: #092e67;
+  --color-peach: #fce4d8;
+  --color-purple: #a17cc1;
+  --color-navy: #111453;
+  --color-rafale-dark: #020618;
+  --color-rafale-light: #ecfeff;
+  --color-rafale-mid: #053345;
+  --color-rafale-accent: #0092b8;
+  --color-rafale-pale: #cefafe;
+  --color-jumio-dark: #323132;
+  --color-jumio-cyan: #13dfce;
+  --color-jumio-green: #5acc29;
+  --color-ms-orange: #ea9230;
+  --color-ms-red: #ec5930;
+  --color-ms-pink: #ed739a;
+  --color-ms-purple: #890b51;
+  --color-ms-dark: #1c1d3b;
+  --color-ms-teal: #008f9f;
+}
+
+/* ─── Fonts personnalisées (depuis le zip) ────────────────────────────── */
+@font-face {
+  font-family: "Dont";
+  src: url("/fonts/Dont-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Frama";
+  src: url("/fonts/PPFrama-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Frama";
+  src: url("/fonts/PPFrama-Extralight.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CocogooseProTrial";
+  src: url("/fonts/CocogooseProTrial-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Hero responsive sizing ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --hero-font: clamp(50px, 19vw, 400px);
+  --hero-avatar: clamp(40px, 12vw, 260px);
+  --hero-margin: -1.5vw;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 1536px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --hero-font: clamp(50px, 28vw, 520px);
+    --hero-avatar: clamp(40px, 18vw, 340px);
+    --hero-margin: -2vw;
   }
 }
 
+/* ─── Base ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-blue);
+  color: var(--color-peach);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: "PP Frama", var(--font-dm-sans), sans-serif;
+}
+
+/* ─── Marquee ─────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Scallop wave ────────────────────────────────────────────────────── */
+@keyframes scallop-wave {
+  from { background-position-x: 0px; }
+  to   { background-position-x: var(--scallop-step); }
+}
+
+/* ─── Hero wave morph ─────────────────────────────────────────────────── */
+@keyframes hero-wave {
+  0%, 100% { d: path("M0,40 C150,110 350,0 500,60 C650,120 800,20 950,70 C1100,120 1300,10 1512,50 L1512,120 L0,120 Z"); }
+  50%       { d: path("M0,70 C180,0  380,120 560,45 C740,100 880,10 1060,75 C1220,130 1380,15 1512,55 L1512,120 L0,120 Z"); }
+}
+
+/* ─── Blob wobble ─────────────────────────────────────────────────────── */
+@keyframes blob-wobble {
+  0%,100% { border-radius: 55% 45% 60% 40% / 40% 55% 45% 60%; }
+  20%     { border-radius: 40% 60% 45% 55% / 60% 40% 55% 45%; }
+  40%     { border-radius: 60% 40% 55% 45% / 50% 60% 40% 55%; }
+  60%     { border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%; }
+  80%     { border-radius: 50% 50% 38% 62% / 58% 42% 50% 50%; }
+}
+
+.blob {
+  animation: blob-wobble 5s ease-in-out infinite;
+}
+.blob:nth-child(2) { animation-delay: -1s; }
+.blob:nth-child(3) { animation-delay: -2s; }
+.blob:nth-child(4) { animation-delay: -3s; }
+.blob:nth-child(5) { animation-delay: -4s; }
+.blob:nth-child(6) { animation-delay: -0.5s; }
+
+/* ─── Font-family utilities (Tailwind v4 ne génère pas --font-family-*) ─ */
+.font-display { font-family: "Dont", var(--font-righteous), cursive !important; }
+.font-body    { font-family: "PP Frama", var(--font-dm-sans), sans-serif !important; }
+.font-heading { font-family: "CocogooseProTrial", var(--font-nunito), sans-serif !important; }
+.font-sen     { font-family: var(--font-sen), sans-serif !important; }
+.font-borel   { font-family: var(--font-borel), cursive !important; }
+.font-jost    { font-family: var(--font-jost), sans-serif !important; }
+.font-barlow  { font-family: var(--font-barlow), "Barlow Condensed", sans-serif !important; }
+
+/* ─── Button chips ───────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1.5px solid #111453;
+  border-radius: 4px;
+  font-family: var(--font-sen), sans-serif;
+  font-size: 14px;
+  color: #111453;
+  background: transparent;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.chip-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 2px solid #111453;
+  border-radius: 8px;
+  font-family: var(--font-sen), sans-serif;
+  font-size: 16px;
+  color: #111453;
+  background: transparent;
+  text-decoration: none;
+  white-space: nowrap;
 }
