@@ -3,7 +3,6 @@
 Portfolio de **Zoé Marchal**, graphic designer — identité visuelle, UI, affiche, édition.
 
 Designé par Zoé Marchal — développé par [Thomas Lekieffre](https://github.com/thomaslekieffre).
-Designé par S
 
 → **[zoemarchal.vercel.app](https://zoemarchal.vercel.app)**
 
