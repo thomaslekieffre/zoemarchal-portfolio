@@ -46,7 +46,7 @@ export default function RafaleProject() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="pt-12 pb-4 px-5 sm:px-8 lg:px-16"
+          className="pt-8 pb-4 px-5 sm:px-8 lg:px-16"
         >
           <div className="w-fit">
             <h2 className="font-heading" style={{ fontSize: "clamp(24px, 2.5vw, 36px)", color: "#fce4d8" }}>
@@ -57,7 +57,7 @@ export default function RafaleProject() {
         </motion.div>
 
         {/* ─── Layout : info gauche / images droite ─── */}
-        <div className="flex flex-col md:flex-row gap-8 px-5 sm:px-8 lg:px-16 pt-4 pb-10">
+        <div className="flex flex-col md:flex-row gap-8 px-5 sm:px-8 lg:px-16 pt-4 pb-6">
 
           {/* ── Colonne info ──────────────────────────── */}
           <motion.div
@@ -71,7 +71,7 @@ export default function RafaleProject() {
             {/* Titre */}
             <div>
               <div className="w-fit">
-                <h3 className="font-heading" style={{ fontSize: "clamp(24px, 2.5vw, 36px)", color: "#fce4d8" }}>
+                <h3 className="font-heading" style={{ fontSize: "clamp(18px, 2vw, 26px)", color: "#fce4d8" }}>
                   Rafale Ambulances
                 </h3>
                 <WavyUnderline width="100%" height={8} />
@@ -113,7 +113,7 @@ export default function RafaleProject() {
               <p className="font-body text-sm font-bold" style={{ color: "#fce4d8" }}>Typographies</p>
 
               <div className="flex flex-col gap-0.5">
-                <span className="font-borel" style={{ fontSize: 28, color: "#fce4d8" }}>Borel</span>
+                <span className="font-borel" style={{ fontSize: 22, color: "#fce4d8" }}>Borel</span>
                 <p className="font-borel text-xs opacity-40 leading-snug" style={{ color: "#fce4d8" }}>
                   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
                 </p>
@@ -180,7 +180,7 @@ export default function RafaleProject() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 px-5 sm:px-8 lg:px-16 pb-16"
+          className="flex flex-col sm:flex-row gap-4 px-5 sm:px-8 lg:px-16 pb-10"
         >
           {/* Laptop mockup */}
           <div style={{ flex: "1.55", aspectRatio: "429/277" }}>
