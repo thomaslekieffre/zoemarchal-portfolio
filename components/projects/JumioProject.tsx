@@ -25,7 +25,7 @@ function ProjectImg({
       <Image src={src} alt={alt} fill className="object-cover" sizes="300px"
         onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
-      <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: "#d5d0cc" }}>
+      <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-xs opacity-30 text-center px-2 font-sen" style={{ color: "#323132" }}>
           {placeholder}
         </span>
