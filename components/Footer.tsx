@@ -100,7 +100,7 @@ export default function Footer() {
       </div>
 
       <p className="text-center font-body text-[10px] mt-8 opacity-25 select-none" style={{ color: "var(--color-blue)" }}>
-        made with ♥ by{" "}
+        developed with ♥ by{" "}
         <a
           href="https://github.com/thomaslekieffre"
           target="_blank"
@@ -108,6 +108,13 @@ export default function Footer() {
           className="underline hover:opacity-100 transition-opacity"
         >
           thomaslekieffre
+        </a>
+        {" "}from a design by{" "}
+        <a
+          href="/"
+          className="underline hover:opacity-100 transition-opacity"
+        >
+          zoemarchal
         </a>
       </p>
     </footer>
