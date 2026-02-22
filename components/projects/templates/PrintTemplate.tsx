@@ -23,7 +23,7 @@ function Img({
 }
 
 export default function PrintTemplate({ project }: { project: Project }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const heroImg = project.images.find((i) => i.role === "hero");
   const portraits = project.images.filter((i) => i.role === "portrait").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const mockupImg = project.images.find((i) => i.role === "mockup");
@@ -83,9 +83,9 @@ export default function PrintTemplate({ project }: { project: Project }) {
                 <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
                   {t.projects.presentation}
                 </p>
-                  <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.8 }}>
-                    {project.description}
-                  </p>
+                <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.8 }}>
+                  {(lang === "en" && project.description_en) ? project.description_en : project.description}
+                </p>
                 </div>
               )}
 

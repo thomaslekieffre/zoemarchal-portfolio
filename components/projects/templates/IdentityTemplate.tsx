@@ -34,7 +34,7 @@ export default function IdentityTemplate({
   project: Project;
   showHeader?: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const overlayImages = project.images.filter((i) => i.role === "overlay").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const bottomImages = project.images.filter((i) => i.role === "bottom").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
@@ -85,7 +85,7 @@ export default function IdentityTemplate({
                   {t.projects.presentation}
                 </p>
                 <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color }}>
-                  {project.description}
+                  {(lang === "en" && project.description_en) ? project.description_en : project.description}
                 </p>
               </div>
             )}

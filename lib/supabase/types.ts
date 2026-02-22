@@ -26,6 +26,7 @@ export type Project = {
   slug: string;
   title: string;
   description: string | null;
+  description_en: string | null;
   bg_color: string;
   text_color: string;
   layout: ProjectLayout;

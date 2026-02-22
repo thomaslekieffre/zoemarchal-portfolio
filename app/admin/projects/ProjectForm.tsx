@@ -26,6 +26,7 @@ type FormState = {
   slug: string;
   title: string;
   description: string;
+  description_en: string;
   bg_color: string;
   text_color: string;
   layout: ProjectLayout;
@@ -40,6 +41,7 @@ const DEFAULT_STATE: FormState = {
   slug: "",
   title: "",
   description: "",
+  description_en: "",
   bg_color: "#ffffff",
   text_color: "#000000",
   layout: "identity",
@@ -55,6 +57,7 @@ function projectToForm(p: Project): FormState {
     slug: p.slug,
     title: p.title,
     description: p.description ?? "",
+    description_en: p.description_en ?? "",
     bg_color: p.bg_color,
     text_color: p.text_color,
     layout: p.layout,
@@ -238,9 +241,13 @@ export default function ProjectForm({ project }: { project?: Project }) {
               className="admin-input" placeholder="ex : rafale-ambulances" />
           </Field>
         </div>
-        <Field label="Description" hint="Texte de présentation du projet, affiché sous « Présentation du projet ». Parle de ce que tu as fait, pour qui et pourquoi.">
+        <Field label="Description (français)" hint="Texte affiché quand le site est en français.">
           <textarea value={form.description} onChange={(e) => set("description", e.target.value)}
-            className="admin-input" rows={4} placeholder="J'ai réalisé... L'objectif était de..." />
+            className="admin-input" rows={3} placeholder="J'ai réalisé... L'objectif était de..." />
+        </Field>
+        <Field label="Description (english)" hint="Text shown when the site is in English. Leave empty to use the French version.">
+          <textarea value={form.description_en} onChange={(e) => set("description_en", e.target.value)}
+            className="admin-input" rows={3} placeholder="I designed... The goal was to..." />
         </Field>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Field label="Couleur de fond" hint="Couleur de la section du projet sur le portfolio (ex : violet pour Rafale, rose pâle pour Jumio).">

@@ -7,7 +7,7 @@ import type { Project } from "@/lib/supabase/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function GalleryTemplate({ project }: { project: Project }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const images = project.images.filter((i) => i.role === "image").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
   const heroImg = project.images.find((i) => i.role === "hero");
 
@@ -35,7 +35,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
               <div className="flex flex-col gap-1.5">
                 <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.presentation}</p>
                 <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.85 }}>
-                  {project.description}
+                  {(lang === "en" && project.description_en) ? project.description_en : project.description}
                 </p>
               </div>
             )}

@@ -26,7 +26,7 @@ function ProjectImg({
 }
 
 export default function UiTemplate({ project }: { project: Project }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const gridImages = project.images.filter((i) => i.role === "grid").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
   return (
@@ -72,9 +72,9 @@ export default function UiTemplate({ project }: { project: Project }) {
               <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
                 {t.projects.presentation}
               </p>
-              <p className="font-body text-sm leading-relaxed max-w-[320px]" style={{ color: project.text_color }}>
-                {project.description}
-              </p>
+                <p className="font-body text-sm leading-relaxed max-w-[320px]" style={{ color: project.text_color }}>
+                  {(lang === "en" && project.description_en) ? project.description_en : project.description}
+                </p>
             </div>
           )}
 
