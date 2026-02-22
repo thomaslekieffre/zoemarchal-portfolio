@@ -76,7 +76,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
   const [uploadingFont, setUploadingFont] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const fontFileRef = useRef<HTMLInputElement>(null);
-  const [pendingRole, setPendingRole] = useState<string>("hero");
+  const [pendingRole, setPendingRole] = useState<string>(() => IMAGE_ROLES[project?.layout ?? "identity"][0]);
   const [pendingIndex, setPendingIndex] = useState<number>(0);
 
   function set<K extends keyof FormState>(key: K, val: FormState[K]) {
