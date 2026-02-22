@@ -152,7 +152,7 @@ export default function RafaleProject() {
               style={{ left: "5%", top: 20, width: "55%", aspectRatio: "4/3" }}
             >
               <ProjectImg
-                src="/images/rafale1.png" alt="Rafale site" placeholder="rafale1.png"
+                src="/projects/rafale/rafale1%201.png" alt="Rafale site" placeholder="rafale1.png"
                 style={{ width: "100%", height: "100%" }} rotation={-4}
               />
             </motion.div>
@@ -167,7 +167,7 @@ export default function RafaleProject() {
               style={{ right: "2%", top: 0, width: "45%", aspectRatio: "3/4" }}
             >
               <ProjectImg
-                src="/images/rafale3.png" alt="Rafale formulaire" placeholder="rafale3.png"
+                src="/projects/rafale/rafale3%201.png" alt="Rafale formulaire" placeholder="rafale3.png"
                 style={{ width: "100%", height: "100%" }} rotation={5}
               />
             </motion.div>
@@ -185,21 +185,21 @@ export default function RafaleProject() {
           {/* Laptop mockup */}
           <div style={{ flex: "1.55", aspectRatio: "429/277" }}>
             <ProjectImg
-              src="/images/mockup_rafale.png" alt="Laptop mockup Rafale" placeholder="mockup_rafale.png"
+              src="/projects/rafale/mockup_rafale%201.png" alt="Laptop mockup Rafale" placeholder="mockup_rafale.png"
               style={{ width: "100%", height: "100%" }} rotation={0}
             />
           </div>
           {/* Rafale 5 */}
           <div style={{ flex: 1, aspectRatio: "317/449" }}>
             <ProjectImg
-              src="/images/rafale5.png" alt="Rafale page 5" placeholder="rafale5.png"
+              src="/projects/rafale/rafale5%201.png" alt="Rafale page 5" placeholder="rafale5.png"
               style={{ width: "100%", height: "100%" }} rotation={-2}
             />
           </div>
           {/* Rafale 6 */}
           <div style={{ flex: 1, aspectRatio: "317/449" }}>
             <ProjectImg
-              src="/images/rafale6.png" alt="Rafale page 6" placeholder="rafale6.png"
+              src="/projects/rafale/rafale6%201.png" alt="Rafale page 6" placeholder="rafale6.png"
               style={{ width: "100%", height: "100%" }} rotation={2}
             />
           </div>
