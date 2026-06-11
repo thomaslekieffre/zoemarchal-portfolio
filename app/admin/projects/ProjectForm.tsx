@@ -52,6 +52,20 @@ const DEFAULT_STATE: FormState = {
   published: true,
 };
 
+function normalizeHex(value: string): string | null {
+  const v = value.trim();
+  if (/^#[0-9A-Fa-f]{6}$/.test(v)) return v.toUpperCase();
+  if (/^#[0-9A-Fa-f]{3}$/.test(v)) {
+    const [, r, g, b] = v;
+    return `#${r}${r}${g}${g}${b}${b}`.toUpperCase();
+  }
+  return null;
+}
+
+function colorPreviewHex(color: ProjectColor): string {
+  return normalizeHex(color.hex) ?? normalizeHex(color.label) ?? "#000000";
+}
+
 function projectToForm(p: Project): FormState {
   return {
     slug: p.slug,
@@ -301,10 +315,24 @@ export default function ProjectForm({ project }: { project?: Project }) {
         <div className="flex flex-col gap-3">
           {form.colors.map((c, i) => (
             <div key={i} className="flex gap-3 items-center flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
-              <input type="color" value={c.gradient ? "#5acc29" : c.hex} onChange={(e) => updateColor(i, { hex: e.target.value, label: e.target.value })} className="w-10 h-10 rounded cursor-pointer border-0" />
+              <input
+                type="color"
+                value={c.gradient ? "#5acc29" : colorPreviewHex(c)}
+                onChange={(e) => updateColor(i, { hex: e.target.value.toUpperCase(), label: e.target.value.toUpperCase() })}
+                className="w-10 h-10 rounded cursor-pointer border-0 shrink-0"
+              />
               <div className="flex flex-col flex-1 gap-1 min-w-[120px]">
                 <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Label affiché sous le rond</label>
-                <input value={c.label} onChange={(e) => updateColor(i, { label: e.target.value })} className="admin-input" placeholder="#FFFFFF ou Gradient" />
+                <input
+                  value={c.label}
+                  onChange={(e) => {
+                    const label = e.target.value;
+                    const hex = normalizeHex(label);
+                    updateColor(i, hex ? { label, hex } : { label });
+                  }}
+                  className="admin-input"
+                  placeholder="#FFFFFF ou Gradient"
+                />
               </div>
               <div className="flex flex-col flex-1 gap-1 min-w-[120px]">
                 <label className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Forme du rond (laisse 50% par défaut)</label>
