@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { supabaseKey, supabaseUrl } from "@/lib/supabase/env";
 
 function isAdmin(request: NextRequest) {
   const session = request.cookies.get("admin_session")?.value;
@@ -21,10 +22,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Format non supporté. Utilise TTF, OTF, WOFF ou WOFF2." }, { status: 400 });
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const fileName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
   const arrayBuffer = await file.arrayBuffer();

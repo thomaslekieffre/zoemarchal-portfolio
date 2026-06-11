@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { supabaseKey, supabaseUrl } from "@/lib/supabase/env";
 
 // Called daily by Vercel Cron to keep Supabase from pausing (free tier pauses after 1 week of inactivity)
 export async function GET(request: Request) {
@@ -9,10 +10,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { error } = await supabase.from("projects").select("id").limit(1);
   if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });

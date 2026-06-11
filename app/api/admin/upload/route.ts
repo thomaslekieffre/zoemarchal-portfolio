@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { supabaseKey, supabaseUrl } from "@/lib/supabase/env";
 
 function isAdmin(request: NextRequest) {
   const session = request.cookies.get("admin_session")?.value;
@@ -16,10 +17,7 @@ export async function POST(request: NextRequest) {
   if (!file) return NextResponse.json({ error: "Fichier manquant" }, { status: 400 });
 
   // Use service role or anon for storage (public bucket)
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const ext = file.name.split(".").pop();
   const fileName = `${slug}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;

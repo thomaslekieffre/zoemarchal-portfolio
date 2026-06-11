@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/proxy";
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  const response = await updateSession(request);
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
@@ -11,9 +13,11 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
