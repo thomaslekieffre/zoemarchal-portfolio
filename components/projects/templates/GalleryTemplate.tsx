@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
@@ -94,7 +94,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
             className="relative w-full mb-6 rounded-2xl overflow-hidden"
             style={{ aspectRatio: "16/9" }}
           >
-            <Image src={heroImg.url} alt={project.title} fill className="object-cover" sizes="100vw" />
+            <ProjectImage src={heroImg.url} alt={project.title} fill className="object-cover" sizes="100vw" />
           </motion.div>
         )}
 
@@ -112,7 +112,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
           >
             {images.map((img, i) => (
               <div key={i} className="relative rounded-2xl overflow-hidden" style={{ aspectRatio: "4/3" }}>
-                <Image
+                <ProjectImage
                   src={img.url} alt={`${project.title} ${i + 1}`} fill className="object-cover"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />

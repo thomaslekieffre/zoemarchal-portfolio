@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
@@ -17,7 +17,7 @@ function ProjectImg({
       className="relative overflow-hidden"
       style={{ ...style, transform: `rotate(${rotation}deg)`, transformOrigin: "center" }}
     >
-      <Image
+      <ProjectImage
         src={src} alt={alt} fill className="object-cover" sizes="300px"
         onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
       />
