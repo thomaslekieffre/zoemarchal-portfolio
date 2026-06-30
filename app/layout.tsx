@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import BackToTop from "@/components/BackToTop";
 import LanguageToggle from "@/components/LanguageToggle";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { SiteContentProvider } from "@/lib/i18n/SiteContentContext";
+import { getSiteContent } from "@/lib/site-content/get-site-content";
 import {
   Borel,
   Sen,
@@ -82,20 +84,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteContent = await getSiteContent();
+
   return (
     <html lang="fr">
       <body
         className={`${dmSans.variable} ${righteous.variable} ${nunito.variable} ${sen.variable} ${borel.variable} ${jost.variable} ${barlowCondensed.variable}`}
       >
         <LanguageProvider>
-          {children}
-          <BackToTop />
-          <LanguageToggle />
+          <SiteContentProvider content={siteContent}>
+            {children}
+            <BackToTop />
+            <LanguageToggle />
+          </SiteContentProvider>
         </LanguageProvider>
       </body>
     </html>

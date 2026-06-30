@@ -4,6 +4,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function Img({
@@ -29,30 +30,25 @@ export default function PrintTemplate({ project }: { project: Project }) {
   const mockupImg = project.images.find((i) => i.role === "mockup");
 
   return (
-    <section className="w-full overflow-hidden" style={{ backgroundColor: project.bg_color }}>
+    <section className="w-full overflow-x-hidden" style={{ backgroundColor: project.bg_color }}>
       <div className="mx-auto px-5 sm:px-8 lg:px-16 py-14 sm:py-20" style={{ maxWidth: 1067 }}>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+        {/* 2 colonnes : gauche [affiche / portraits] · droite [texte / mockup] */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
 
-          {/* Colonne gauche : affiche + portraits */}
-          <div className="flex flex-col gap-24">
+          <div className="flex flex-col gap-16 md:gap-24">
             {heroImg && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
+              <motion.div variants={slideUp} initial="hidden" whileInView="visible" viewport={inView}>
                 <Img src={heroImg.url} alt={project.title} style={{ width: "100%", aspectRatio: "367/542" }} />
               </motion.div>
             )}
 
             {portraits.length > 0 && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.15 }}
+                variants={slideUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={inView}
                 className="grid grid-cols-3 gap-2 sm:gap-3"
               >
                 {portraits.map((img) => (
@@ -62,12 +58,11 @@ export default function PrintTemplate({ project }: { project: Project }) {
             )}
           </div>
 
-          {/* Colonne droite : texte + mockup */}
-          <div className="flex flex-col gap-24">
+          <div className="flex flex-col gap-16 md:gap-24">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={inView}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="flex flex-col gap-8 pt-2"
             >
@@ -80,12 +75,12 @@ export default function PrintTemplate({ project }: { project: Project }) {
 
               {project.description && (
                 <div className="flex flex-col gap-1.5">
-                <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
-                  {t.projects.presentation}
-                </p>
-                <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.8 }}>
-                  {(lang === "en" && project.description_en) ? project.description_en : project.description}
-                </p>
+                  <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>
+                    {t.projects.presentation}
+                  </p>
+                  <p className="font-body text-sm leading-relaxed" style={{ color: project.text_color, opacity: 0.8 }}>
+                    {(lang === "en" && project.description_en) ? project.description_en : project.description}
+                  </p>
                 </div>
               )}
 
@@ -93,8 +88,8 @@ export default function PrintTemplate({ project }: { project: Project }) {
                 <div className="flex flex-col gap-2">
                   <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
                   <div className="flex gap-3 flex-wrap">
-                    {project.colors.map((c) => (
-                      <div key={c.hex} className="flex flex-col items-center gap-1">
+                    {project.colors.map((c, i) => (
+                      <div key={`${c.hex}-${i}`} className="flex flex-col items-center gap-1">
                         <div className="blob w-12 h-12 shrink-0" style={{ backgroundColor: c.hex, borderRadius: c.radius }} />
                         <span className="font-body text-[10px] opacity-50" style={{ color: project.text_color }}>
                           {c.label}
@@ -130,17 +125,11 @@ export default function PrintTemplate({ project }: { project: Project }) {
             </motion.div>
 
             {mockupImg && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+              <motion.div variants={slideUp} initial="hidden" whileInView="visible" viewport={inView}>
                 <Img src={mockupImg.url} alt={`${project.title} mockup`} style={{ width: "100%", aspectRatio: "549/411" }} />
               </motion.div>
             )}
           </div>
-
         </div>
       </div>
     </section>

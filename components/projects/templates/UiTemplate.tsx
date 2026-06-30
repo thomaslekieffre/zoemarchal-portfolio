@@ -4,6 +4,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function ProjectImg({
@@ -35,10 +36,10 @@ export default function UiTemplate({ project }: { project: Project }) {
 
         {/* Images gauche : grille 2×2 */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          variants={slideUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={inView}
           className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 w-full md:w-auto"
           style={{ maxWidth: 600, minWidth: "min(340px, 100%)" }}
         >
@@ -56,7 +57,7 @@ export default function UiTemplate({ project }: { project: Project }) {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={inView}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex flex-col gap-8 flex-1 pt-2"
         >
@@ -82,8 +83,8 @@ export default function UiTemplate({ project }: { project: Project }) {
             <div className="flex flex-col gap-2">
               <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
               <div className="flex gap-3 flex-wrap">
-                {project.colors.map((c) => (
-                  <div key={c.label} className="flex flex-col items-center gap-1">
+                {project.colors.map((c, i) => (
+                  <div key={`${c.hex}-${i}`} className="flex flex-col items-center gap-1">
                     <div
                       className="blob w-12 h-12 shrink-0"
                       style={{

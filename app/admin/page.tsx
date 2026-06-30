@@ -34,6 +34,13 @@ export default async function AdminDashboard() {
             ← Voir le portfolio
           </Link>
           <Link
+            href="/admin/content"
+            className="font-body text-sm px-4 py-2 rounded-full"
+            style={{ border: "1.5px solid var(--color-blue)", color: "var(--color-blue)" }}
+          >
+            ✎ Contenu du site
+          </Link>
+          <Link
             href="/admin/projects/new"
             className="font-body text-sm px-4 py-2 rounded-full font-medium"
             style={{ backgroundColor: "var(--color-blue)", color: "var(--color-peach)" }}

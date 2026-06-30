@@ -4,6 +4,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import type { Project } from "@/lib/supabase/types";
+import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function GalleryTemplate({ project }: { project: Project }) {
@@ -20,7 +21,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={inView}
             transition={{ duration: 0.6 }}
             className="flex flex-col gap-6 md:w-1/2"
           >
@@ -44,7 +45,7 @@ export default function GalleryTemplate({ project }: { project: Project }) {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={inView}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-col gap-6 md:w-1/2"
           >
@@ -52,8 +53,8 @@ export default function GalleryTemplate({ project }: { project: Project }) {
               <div className="flex flex-col gap-2">
                 <p className="font-body text-sm font-bold" style={{ color: project.text_color }}>{t.projects.colors}</p>
                 <div className="flex gap-3 flex-wrap">
-                  {project.colors.map((c) => (
-                    <div key={c.label} className="flex flex-col items-center gap-1">
+                  {project.colors.map((c, i) => (
+                    <div key={`${c.hex}-${i}`} className="flex flex-col items-center gap-1">
                       <div
                         className="blob w-12 h-12 shrink-0"
                         style={{
@@ -86,25 +87,21 @@ export default function GalleryTemplate({ project }: { project: Project }) {
 
         {/* Hero image (pleine largeur) */}
         {heroImg && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="relative w-full mb-6 rounded-2xl overflow-hidden"
             style={{ aspectRatio: "16/9" }}
           >
             <ProjectImage src={heroImg.url} alt={project.title} fill className="object-cover" sizes="100vw" />
-          </motion.div>
+          </div>
         )}
 
         {/* Grille d'images */}
         {images.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            variants={slideUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={inView}
             className="grid gap-4"
             style={{
               gridTemplateColumns: images.length === 1 ? "1fr" : images.length === 2 ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(280px, 1fr))",
