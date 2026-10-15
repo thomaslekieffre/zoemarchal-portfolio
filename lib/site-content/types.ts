@@ -16,6 +16,18 @@ export type SiteEducation = {
   subjects: string;
 };
 
+export type SiteTestimonial = {
+  name: string;
+  role: string;
+  quote: string;
+};
+
+/** Couleur de la palette de base, réutilisable dans les projets */
+export type BasePaletteColor = {
+  hex: string;
+  label: string;
+};
+
 export type LocaleContent = {
   greeting: string;
   bio1: string;
@@ -25,11 +37,13 @@ export type LocaleContent = {
   education: SiteEducation[];
   interests: string[];
   contacts: SiteContact[];
+  testimonials: SiteTestimonial[];
 };
 
 export type SiteContent = {
   fr: LocaleContent;
   en: LocaleContent;
+  palette: BasePaletteColor[];
 };
 
 export type SiteContentRow = {

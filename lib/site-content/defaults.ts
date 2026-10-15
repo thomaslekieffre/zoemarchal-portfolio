@@ -33,10 +33,12 @@ function localeFromTranslations(lang: "fr" | "en"): SiteContent["fr"] {
           { type: "phone", label: "+33 7 86 49 92 59", href: "tel:+33786499259" },
           { type: "email", label: "z.marchal10@gmail.com", href: "mailto:z.marchal10@gmail.com" },
         ],
+    testimonials: [],
   };
 }
 
 export const defaultSiteContent: SiteContent = {
   fr: localeFromTranslations("fr"),
   en: localeFromTranslations("en"),
+  palette: [],
 };

@@ -2,6 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Reorder, useDragControls } from "framer-motion";
+import type { BasePaletteColor, SiteContent } from "@/lib/site-content/types";
 import type { Project, ProjectColor, ProjectFont, ProjectImage, ProjectLayout } from "@/lib/supabase/types";
 
 const LAYOUT_OPTIONS: { value: ProjectLayout; label: string }[] = [
@@ -9,6 +11,8 @@ const LAYOUT_OPTIONS: { value: ProjectLayout; label: string }[] = [
   { value: "ui", label: "UI / UX — grille de captures d'écran à gauche, info à droite" },
   { value: "print", label: "Affiche / Print — affiche + portraits à gauche, mockup à droite" },
   { value: "gallery", label: "Galerie — grille d'images libre (illustration, photo, packaging…)" },
+  { value: "grid", label: "Grille photo — 3 colonnes régulières, photos recadrées en carré" },
+  { value: "mosaic", label: "Mosaïque photo — colonnes façon Pinterest, photos à leur format" },
   { value: "motion", label: "Motion / Vidéo — grille de captures ou thumbnails" },
   { value: "editorial", label: "Éditorial / Livre — grille de pages ou spreads" },
 ];
@@ -18,6 +22,8 @@ const IMAGE_ROLES: Record<ProjectLayout, string[]> = {
   ui: ["grid"],
   print: ["hero", "portrait", "mockup"],
   gallery: ["hero", "image"],
+  grid: ["image"],
+  mosaic: ["image"],
   motion: ["hero", "image"],
   editorial: ["hero", "image"],
 };
@@ -83,7 +89,13 @@ function projectToForm(p: Project): FormState {
   };
 }
 
-export default function ProjectForm({ project }: { project?: Project }) {
+export default function ProjectForm({
+  project,
+  basePalette = [],
+}: {
+  project?: Project;
+  basePalette?: BasePaletteColor[];
+}) {
   const router = useRouter();
   const isEdit = !!project;
   const [form, setForm] = useState<FormState>(project ? projectToForm(project) : DEFAULT_STATE);
@@ -94,7 +106,8 @@ export default function ProjectForm({ project }: { project?: Project }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const fontFileRef = useRef<HTMLInputElement>(null);
   const [pendingRole, setPendingRole] = useState<string>(() => IMAGE_ROLES[project?.layout ?? "identity"][0]);
-  const [pendingIndex, setPendingIndex] = useState<number>(0);
+  const [palettes, setPalettes] = useState<BasePaletteColor[]>(basePalette);
+  const [savingToBase, setSavingToBase] = useState<number | null>(null);
 
   function set<K extends keyof FormState>(key: K, val: FormState[K]) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -103,6 +116,27 @@ export default function ProjectForm({ project }: { project?: Project }) {
   // Colors
   function addColor() {
     set("colors", [...form.colors, { hex: "#000000", label: "#000000", radius: "50%", gradient: false }]);
+  }
+  function addBaseColor(base: BasePaletteColor) {
+    set("colors", [...form.colors, { hex: base.hex, label: base.label || base.hex, radius: "50%", gradient: false }]);
+  }
+  // Envoie une couleur du projet dans la palette de base, sans quitter le formulaire
+  async function saveColorToBase(i: number) {
+    const c = form.colors[i];
+    const hex = colorPreviewHex(c);
+    setSavingToBase(i);
+    const current = (await fetch("/api/admin/site-content").then((r) => r.json())) as SiteContent;
+    const label = c.label && !normalizeHex(c.label) ? c.label : hex;
+    const res = await fetch("/api/admin/site-content", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...current, palette: [...current.palette, { hex, label }] }),
+    });
+    if (res.ok) {
+      const saved = (await res.json()) as SiteContent;
+      setPalettes(saved.palette);
+    }
+    setSavingToBase(null);
   }
   function updateColor(i: number, patch: Partial<ProjectColor>) {
     set("colors", form.colors.map((c, idx) => idx === i ? { ...c, ...patch } : c));
@@ -149,7 +183,8 @@ export default function ProjectForm({ project }: { project?: Project }) {
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
       if (res.ok) {
         const { url } = await res.json();
-        set("images", [...form.images, { url, role: pendingRole, index: pendingIndex }]);
+        // Mise à jour fonctionnelle : sinon chaque fichier écrase le précédent
+        setForm((f) => ({ ...f, images: reindex([...f.images, { url, role: pendingRole, index: 0 }]) }));
       }
     }
     setUploading(false);
@@ -157,7 +192,11 @@ export default function ProjectForm({ project }: { project?: Project }) {
   }
 
   function removeImage(i: number) {
-    set("images", form.images.filter((_, idx) => idx !== i));
+    set("images", reindex(form.images.filter((_, idx) => idx !== i)));
+  }
+
+  function changeImageRole(i: number, role: string) {
+    set("images", reindex(form.images.map((img, idx) => (idx === i ? { ...img, role } : img))));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -213,6 +252,16 @@ export default function ProjectForm({ project }: { project?: Project }) {
       <ul className="list-disc pl-4 space-y-0.5">
         <li><strong>hero</strong> — image principale pleine largeur (optionnelle)</li>
         <li><strong>image</strong> (index 0, 1, 2…) — images de la grille, dans l'ordre</li>
+      </ul>
+    ),
+    grid: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>image</strong> (index 0, 1, 2…) — photos affichées dans l'ordre, 3 par ligne</li>
+      </ul>
+    ),
+    mosaic: (
+      <ul className="list-disc pl-4 space-y-0.5">
+        <li><strong>image</strong> (index 0, 1, 2…) — photos affichées dans l'ordre, en colonnes</li>
       </ul>
     ),
     motion: (
@@ -302,6 +351,8 @@ export default function ProjectForm({ project }: { project?: Project }) {
           {form.layout === "ui" && "🖥 Grille de 4 captures d'écran à gauche · Présentation + palette + police à droite. Parfait pour un projet digital (appli, site, PDF)."}
           {form.layout === "print" && "🎨 Affiche + portraits à gauche · Texte + palette + police + mockup à droite. Parfait pour une affiche, de l'édition, du print."}
           {form.layout === "gallery" && "🖼 Header avec titre + description + palette · Puis image hero pleine largeur + grille d'images libre. Parfait pour de l'illustration, packaging, photo…"}
+          {form.layout === "grid" && "▦ Header avec titre + description + palette · Puis grille régulière de 3 colonnes (2 sur mobile). Parfait pour une série de photos."}
+          {form.layout === "mosaic" && "🧱 Header avec titre + description + palette · Puis mosaïque en colonnes, photos gardées à leur format. Parfait pour des photos de formats variés."}
           {form.layout === "motion" && "🎬 Même mise en page que Galerie. Upload des thumbnails ou captures de tes vidéos/animations."}
           {form.layout === "editorial" && "📖 Même mise en page que Galerie. Upload des scans ou photos de pages, spreads, livres…"}
         </div>
@@ -312,6 +363,35 @@ export default function ProjectForm({ project }: { project?: Project }) {
         title="Palette de couleurs"
         hint="Les couleurs du projet s'affichent sous forme de petits ronds animés. Tu peux en mettre autant que tu veux."
       >
+        {palettes.length > 0 ? (
+          <div className="flex flex-col gap-2 p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.05)" }}>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <p className="font-body text-xs font-semibold" style={{ color: "var(--color-blue)" }}>
+                Palette de base — clique pour ajouter au projet
+              </p>
+              <a href="/admin/palette" className="font-body text-[11px] underline opacity-70" style={{ color: "var(--color-blue)" }}>Gérer la palette</a>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {palettes.map((b, i) => (
+                <button
+                  key={`${b.hex}-${i}`}
+                  type="button"
+                  onClick={() => addBaseColor(b)}
+                  className="flex items-center gap-2 px-2 py-1 rounded-full bg-white font-body text-xs transition-opacity hover:opacity-70"
+                  style={{ border: "1.5px solid rgba(9,46,103,0.15)", color: "var(--color-blue)" }}
+                >
+                  <span className="w-4 h-4 rounded-full shrink-0 border border-black/10" style={{ backgroundColor: b.hex }} />
+                  {b.label || b.hex}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="font-body text-xs" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
+            Pas encore de palette de base.{" "}
+            <a href="/admin/palette" className="underline">Crée tes couleurs réutilisables</a> pour ne plus les retaper à chaque projet.
+          </p>
+        )}
         <div className="flex flex-col gap-3">
           {form.colors.map((c, i) => (
             <div key={i} className="flex gap-3 items-center flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
@@ -342,6 +422,16 @@ export default function ProjectForm({ project }: { project?: Project }) {
                 <input type="checkbox" checked={!!c.gradient} onChange={(e) => updateColor(i, { gradient: e.target.checked })} />
                 C&apos;est un gradient
               </label>
+              <button
+                type="button"
+                onClick={() => saveColorToBase(i)}
+                disabled={savingToBase === i}
+                title="Ajoute cette couleur à la palette de base, réutilisable dans tous les projets"
+                className="text-xs font-body px-2 py-1 rounded-full disabled:opacity-40"
+                style={{ border: "1.5px solid rgba(9,46,103,0.3)", color: "var(--color-blue)" }}
+              >
+                {savingToBase === i ? "…" : "★ Garder dans la base"}
+              </button>
               <button type="button" onClick={() => removeColor(i)} className="text-red-500 text-xs font-body px-2 py-1 rounded hover:bg-red-50">✕ Supprimer</button>
             </div>
           ))}
@@ -433,9 +523,6 @@ export default function ProjectForm({ project }: { project?: Project }) {
               {roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </Field>
-          <Field label="Index (si plusieurs images du même rôle, ex: portrait 0, 1, 2)">
-            <input type="number" value={pendingIndex} onChange={(e) => setPendingIndex(Number(e.target.value))} className="admin-input w-20" min={0} />
-          </Field>
           <div className="flex flex-col gap-1">
             <label className="font-body text-xs font-medium" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
               Sélectionner le(s) fichier(s)
@@ -451,22 +538,22 @@ export default function ProjectForm({ project }: { project?: Project }) {
         </div>
 
         {form.images.length > 0 && (
-          <div>
-            <p className="font-body text-xs mb-2 mt-1" style={{ color: "var(--color-blue)", opacity: 0.5 }}>Images ajoutées ({form.images.length}) :</p>
-            <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-2">
+            <p className="font-body text-xs mt-1" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
+              {form.images.length} image{form.images.length > 1 ? "s" : ""} · glisse ⋮⋮ pour changer l&apos;ordre (c&apos;est l&apos;ordre d&apos;affichage)
+            </p>
+            <Reorder.Group axis="y" values={form.images} onReorder={(imgs) => set("images", reindex(imgs))} className="flex flex-col gap-2">
               {form.images.map((img, i) => (
-                <div key={i} className="relative flex flex-col items-center gap-1">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.url} alt="" className="w-24 h-24 object-cover rounded-xl" />
-                  <span className="font-body text-[10px] font-medium text-center" style={{ color: "var(--color-blue)", opacity: 0.7 }}>
-                    {img.role}{img.index !== undefined ? ` #${img.index}` : ""}
-                  </span>
-                  <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                    ✕
-                  </button>
-                </div>
+                <ImageRow
+                  key={img.url}
+                  img={img}
+                  position={i + 1}
+                  roleOptions={roleOptions}
+                  onRoleChange={(role) => changeImageRole(i, role)}
+                  onRemove={() => removeImage(i)}
+                />
               ))}
-            </div>
+            </Reorder.Group>
           </div>
         )}
       </Section>
@@ -477,13 +564,73 @@ export default function ProjectForm({ project }: { project?: Project }) {
         </div>
       )}
 
-      <div className="flex gap-3 pb-4">
+      {/* Barre d'action collante : toujours visible pendant l'édition */}
+      <div className="sticky bottom-0 -mx-6 px-6 py-4 flex gap-3 items-center flex-wrap bg-[#f5f0eb]/95 backdrop-blur" style={{ borderTop: "1px solid rgba(9,46,103,0.1)" }}>
         <button type="submit" disabled={saving} className="admin-btn-primary disabled:opacity-50">
           {saving ? "Sauvegarde en cours…" : isEdit ? "✓ Mettre à jour le projet" : "✓ Créer le projet"}
         </button>
         <a href="/admin" className="admin-btn-secondary">Annuler</a>
       </div>
     </form>
+  );
+}
+
+/** Renumérote les images par rôle, dans l'ordre du tableau : c'est cet ordre qui fait l'index */
+function reindex(images: ProjectImage[]): ProjectImage[] {
+  const counter: Record<string, number> = {};
+  return images.map((img) => {
+    const index = counter[img.role] ?? 0;
+    counter[img.role] = index + 1;
+    return { ...img, index };
+  });
+}
+
+function ImageRow({
+  img,
+  position,
+  roleOptions,
+  onRoleChange,
+  onRemove,
+}: {
+  img: ProjectImage;
+  position: number;
+  roleOptions: string[];
+  onRoleChange: (role: string) => void;
+  onRemove: () => void;
+}) {
+  const dragControls = useDragControls();
+
+  return (
+    <Reorder.Item
+      value={img}
+      dragListener={false}
+      dragControls={dragControls}
+      className="flex items-center gap-3 p-2 rounded-xl bg-white"
+      style={{ border: "1.5px solid rgba(9,46,103,0.1)" }}
+    >
+      <div
+        onPointerDown={(e) => dragControls.start(e)}
+        className="font-body text-lg leading-none select-none cursor-grab active:cursor-grabbing px-1 touch-none"
+        style={{ color: "var(--color-blue)", opacity: 0.4 }}
+        aria-label="Glisser pour réordonner"
+        role="button"
+        tabIndex={-1}
+      >
+        ⋮⋮
+      </div>
+      <span className="font-body text-xs w-6 text-center" style={{ color: "var(--color-blue)", opacity: 0.5 }}>{position}</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={img.url} alt="" className="w-14 h-14 object-cover rounded-lg shrink-0" />
+      <div className="flex flex-col flex-1 min-w-0 gap-1">
+        <span className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Rôle</span>
+        <select value={img.role} onChange={(e) => onRoleChange(e.target.value)} className="admin-input py-1 text-xs">
+          {roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}
+        </select>
+      </div>
+      <button type="button" onClick={onRemove} className="text-red-600 text-xs font-body px-3 py-1.5 rounded-full hover:bg-red-50 shrink-0">
+        Supprimer
+      </button>
+    </Reorder.Item>
   );
 }
 

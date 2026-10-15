@@ -3,6 +3,7 @@ import IdentityTemplate from "./templates/IdentityTemplate";
 import UiTemplate from "./templates/UiTemplate";
 import PrintTemplate from "./templates/PrintTemplate";
 import GalleryTemplate from "./templates/GalleryTemplate";
+import GridTemplate from "./templates/GridTemplate";
 import FontInjector from "../FontInjector";
 
 export default function ProjectRenderer({
@@ -24,6 +25,10 @@ export default function ProjectRenderer({
       case "motion":
       case "editorial":
         return <GalleryTemplate project={project} />;
+      case "grid":
+        return <GridTemplate project={project} variant="grid" />;
+      case "mosaic":
+        return <GridTemplate project={project} variant="mosaic" />;
       default:
         return null;
     }
@@ -32,7 +37,15 @@ export default function ProjectRenderer({
   return (
     <>
       <FontInjector fonts={project.fonts} />
-      {template}
+      <div className="relative">
+        {template}
+        {/* Grain brique discret : casse l'aplat de couleur sans gêner la lecture */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
+          style={{ backgroundImage: "url(/Texturelabs_Brick_124XL.jpg)", backgroundSize: "420px" }}
+        />
+      </div>
     </>
   );
 }

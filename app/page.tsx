@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import ScallopDivider from "@/components/ScallopDivider";
 import Footer from "@/components/Footer";
+import Testimonials from "@/components/Testimonials";
 import ProjectRenderer from "@/components/projects/ProjectRenderer";
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/supabase/types";
@@ -62,6 +63,7 @@ export default async function Home() {
         </>
       )}
 
+      <Testimonials />
       <Footer />
     </main>
   );

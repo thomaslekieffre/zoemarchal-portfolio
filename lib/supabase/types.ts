@@ -1,4 +1,4 @@
-export type ProjectLayout = "identity" | "ui" | "print" | "gallery" | "motion" | "editorial";
+export type ProjectLayout = "identity" | "ui" | "print" | "gallery" | "motion" | "editorial" | "grid" | "mosaic";
 
 export type ProjectColor = {
   hex: string;

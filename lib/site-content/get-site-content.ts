@@ -13,6 +13,7 @@ function mergeLocale(stored: Partial<LocaleContent> | undefined, fallback: Local
     education: stored.education?.length ? stored.education : fallback.education,
     interests: stored.interests?.length ? stored.interests : fallback.interests,
     contacts: stored.contacts?.length ? stored.contacts : fallback.contacts,
+    testimonials: stored.testimonials ?? fallback.testimonials,
   };
 }
 
@@ -20,6 +21,7 @@ export function mergeSiteContent(stored: Partial<SiteContent> | null | undefined
   return {
     fr: mergeLocale(stored?.fr, defaultSiteContent.fr),
     en: mergeLocale(stored?.en, defaultSiteContent.en),
+    palette: stored?.palette ?? defaultSiteContent.palette,
   };
 }
 

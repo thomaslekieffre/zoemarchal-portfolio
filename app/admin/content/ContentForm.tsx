@@ -9,6 +9,7 @@ import type {
   SiteContent,
   SiteEducation,
   SiteExperience,
+  SiteTestimonial,
 } from "@/lib/site-content/types";
 
 const CONTACT_TYPES: { value: ContactType; label: string }[] = [
@@ -58,6 +59,11 @@ function LocaleForm({
   const updateInterest = (i: number, value: string) => {
     const interests = data.interests.map((item, idx) => (idx === i ? value : item));
     set("interests", interests);
+  };
+
+  const updateTestimonial = (i: number, patch: Partial<SiteTestimonial>) => {
+    const testimonials = data.testimonials.map((t, idx) => (idx === i ? { ...t, ...patch } : t));
+    set("testimonials", testimonials);
   };
 
   return (
@@ -192,6 +198,40 @@ function LocaleForm({
           </div>
         ))}
       </section>
+
+      <section className="flex flex-col gap-4 p-5 rounded-2xl bg-white" style={{ border: "1.5px solid rgba(9,46,103,0.08)" }}>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-heading text-lg" style={{ color: "var(--color-blue)" }}>Avis</h2>
+          <button
+            type="button"
+            className="admin-btn-secondary text-xs"
+            onClick={() => set("testimonials", [...data.testimonials, { name: "", role: "", quote: "" }])}
+          >
+            + Ajouter
+          </button>
+        </div>
+        <p className="font-body text-xs opacity-60" style={{ color: "var(--color-blue)" }}>
+          Carrousel affiché avant le footer, dans la langue de l&apos;onglet. Sans avis dans une langue, la section est masquée sur cette version du site.
+        </p>
+        {data.testimonials.map((t, i) => (
+          <div key={i} className="flex flex-col gap-3 p-4 rounded-xl" style={{ backgroundColor: "#f5f0eb" }}>
+            <Field label="Citation">
+              <textarea className="admin-input" rows={3} value={t.quote} onChange={(e) => updateTestimonial(i, { quote: e.target.value })} />
+            </Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Nom">
+                <input className="admin-input" value={t.name} onChange={(e) => updateTestimonial(i, { name: e.target.value })} placeholder="Marie, Rafale Ambulances" />
+              </Field>
+              <Field label="Rôle / entreprise (optionnel)">
+                <input className="admin-input" value={t.role} onChange={(e) => updateTestimonial(i, { role: e.target.value })} placeholder="Gérant" />
+              </Field>
+            </div>
+            <button type="button" className="admin-btn-secondary text-xs w-fit" onClick={() => set("testimonials", data.testimonials.filter((_, idx) => idx !== i))}>
+              Supprimer
+            </button>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }
@@ -249,6 +289,7 @@ export default function ContentForm({ initial }: { initial: SiteContent }) {
         data={form[tab]}
         onChange={(data) => setForm((prev) => ({ ...prev, [tab]: data }))}
       />
+
 
       {error && <p className="font-body text-sm text-red-600">{error}</p>}
 

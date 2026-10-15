@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteContent } from "@/lib/site-content/get-site-content";
 import type { Project } from "@/lib/supabase/types";
 import ProjectForm from "../ProjectForm";
 
@@ -12,6 +13,7 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
   if (!data) notFound();
 
   const project = data as Project;
+  const { palette } = await getSiteContent();
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-6">
@@ -23,7 +25,7 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
           Modifier — {project.title}
         </h1>
       </div>
-      <ProjectForm project={project} />
+      <ProjectForm project={project} basePalette={palette} />
     </div>
   );
 }
