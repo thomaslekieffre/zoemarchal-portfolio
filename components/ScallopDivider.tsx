@@ -26,41 +26,35 @@ export default function ScallopDivider({
     ["--scallop-step" as string]: `${step}px`,
   };
 
+  let scallopStyle: React.CSSProperties;
+
   if (variant === "bubbles") {
     const color = bubbleColor ?? bottomColor;
-    return (
-      <div
-        className="w-full"
-        style={{
-          height: size,
-          backgroundImage: `radial-gradient(circle at 50% 100%, ${color} ${size * 0.85}px, ${topColor} ${size * 0.85 + 0.5}px)`,
-          ...baseStyle,
-        }}
-      />
-    );
-  }
-
-  if (variant === "up") {
-    return (
-      <div
-        className="w-full"
-        style={{
-          height: size,
-          backgroundImage: `radial-gradient(circle at 50% 100%, ${bottomColor} ${size - 0.5}px, ${topColor} ${size}px)`,
-          ...baseStyle,
-        }}
-      />
-    );
+    scallopStyle = {
+      backgroundImage: `radial-gradient(circle at 50% 100%, ${color} ${size * 0.85}px, ${topColor} ${size * 0.85 + 0.5}px)`,
+      ...baseStyle,
+    };
+  } else if (variant === "up") {
+    scallopStyle = {
+      backgroundImage: `radial-gradient(circle at 50% 100%, ${bottomColor} ${size - 0.5}px, ${topColor} ${size}px)`,
+      ...baseStyle,
+    };
+  } else {
+    scallopStyle = {
+      backgroundImage: `radial-gradient(circle at 50% 100%, ${bottomColor} ${size - 0.5}px, ${topColor} ${size}px)`,
+      ...baseStyle,
+    };
   }
 
   return (
-    <div
-      className="w-full"
-      style={{
-        height: size,
-        backgroundImage: `radial-gradient(circle at 50% 100%, ${bottomColor} ${size - 0.5}px, ${topColor} ${size}px)`,
-        ...baseStyle,
-      }}
-    />
+    <div className="relative w-full overflow-hidden" style={{ height: size }}>
+      <div className="absolute inset-0" style={scallopStyle} />
+      {/* Même grain brique que les sections projet : évite la couture entre aplat et texture */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
+        style={{ backgroundImage: "url(/Texturelabs_Brick_124XL.jpg)", backgroundSize: "420px" }}
+      />
+    </div>
   );
 }
