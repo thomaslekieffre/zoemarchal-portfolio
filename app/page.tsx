@@ -13,9 +13,9 @@ const SCALLOP_COLORS: Record<string, { top: string; bottom: string }> = {
   print: { top: "#092E67", bottom: "#fce4d8" },
 };
 
+// Doit correspondre au fond réellement rendu par le template (project.bg_color),
+// sinon le séparateur ne se raccorde pas à la section.
 function getBgColor(project: Project) {
-  if (project.layout === "identity") return "#a17cc1";
-  if (project.layout === "ui") return "#fce4d8";
   return project.bg_color;
 }
 
