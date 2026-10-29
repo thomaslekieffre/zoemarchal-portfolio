@@ -37,15 +37,7 @@ export default function ProjectRenderer({
   return (
     <>
       <FontInjector fonts={project.fonts} />
-      <div className="relative">
-        {template}
-        {/* Grain brique discret : casse l'aplat de couleur sans gêner la lecture */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
-          style={{ backgroundImage: "url(/Texturelabs_Brick_124XL.jpg)", backgroundSize: "420px" }}
-        />
-      </div>
+      {template}
     </>
   );
 }

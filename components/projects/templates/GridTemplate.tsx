@@ -4,6 +4,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import SchoolTag from "../SchoolTag";
+import SiteLink from "../SiteLink";
 import type { Project } from "@/lib/supabase/types";
 import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -29,13 +30,13 @@ export default function GridTemplate({ project, variant }: { project: Project; v
             transition={{ duration: 0.6 }}
             className="flex flex-col gap-6 md:w-1/2"
           >
-            <div className="w-fit">
+            <SiteLink href={project.website_url ?? undefined} className="w-fit">
               {project.school_project && <SchoolTag />}
               <h3 className="font-heading" style={{ fontSize: 32, color: project.text_color, fontWeight: 400, lineHeight: 1 }}>
                 {project.title}
               </h3>
               <WavyUnderline width="100%" height={8} />
-            </div>
+            </SiteLink>
 
             {project.description && (
               <div className="flex flex-col gap-1.5">

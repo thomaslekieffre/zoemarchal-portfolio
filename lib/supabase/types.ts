@@ -37,6 +37,8 @@ export type Project = {
   published: boolean;
   /** Affiche un tag « projet scolaire » sur le portfolio */
   school_project: boolean;
+  /** Lien vers le site du projet : rend le titre cliquable si rempli */
+  website_url: string | null;
   created_at: string;
 };
 
