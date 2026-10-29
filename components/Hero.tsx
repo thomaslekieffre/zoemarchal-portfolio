@@ -100,7 +100,7 @@ export default function Hero() {
           preserveAspectRatio="none"
           className="w-full h-full"
         >
-          <path d="M0,240 Q756,0 1512,240 Z" fill="#fce4d8" />
+          <path d="M0,240 Q756,0 1512,240 Z" style={{ fill: "var(--color-peach)" }} />
         </svg>
       </div>
 

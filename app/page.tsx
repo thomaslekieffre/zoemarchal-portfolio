@@ -39,11 +39,11 @@ export default async function Home() {
 
       {published.length > 0 && (
         <>
-          <ScallopDivider topColor="#fce4d8" bottomColor={firstBg} size={80} variant="down" />
+          <ScallopDivider topColor="var(--color-peach)" bottomColor={firstBg} size={80} variant="down" />
 
           {published.map((project, idx) => {
             const isLast = idx === published.length - 1;
-            const nextBg = isLast ? "#fce4d8" : getBgColor(published[idx + 1]);
+            const nextBg = isLast ? "var(--color-peach)" : getBgColor(published[idx + 1]);
             const currentBg = getBgColor(project);
             const reverse = idx % 2 === 1;
 

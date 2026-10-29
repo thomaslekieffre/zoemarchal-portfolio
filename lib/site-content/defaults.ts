@@ -1,4 +1,5 @@
 import { translations } from "@/lib/i18n/translations";
+import { DEFAULT_THEME } from "./theme";
 import type { SiteContent } from "./types";
 
 function localeFromTranslations(lang: "fr" | "en"): SiteContent["fr"] {
@@ -40,5 +41,5 @@ function localeFromTranslations(lang: "fr" | "en"): SiteContent["fr"] {
 export const defaultSiteContent: SiteContent = {
   fr: localeFromTranslations("fr"),
   en: localeFromTranslations("en"),
-  palette: [],
+  theme: DEFAULT_THEME,
 };

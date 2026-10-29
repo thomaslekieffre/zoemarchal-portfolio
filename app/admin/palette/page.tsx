@@ -12,11 +12,10 @@ export default async function AdminPalettePage() {
           ← Retour aux projets
         </Link>
         <h1 className="font-heading text-3xl mt-3" style={{ color: "var(--color-blue)" }}>
-          Palette de base
+          Couleurs du site
         </h1>
         <p className="font-body text-sm mt-2 leading-relaxed" style={{ color: "var(--color-blue)", opacity: 0.7 }}>
-          Tes couleurs réutilisables. Crée-les une fois ici, puis dans un projet un simple clic les ajoute à sa palette.
-          Pas besoin de retaper les codes hex à chaque projet.
+          Les couleurs de tout le site, avec un aperçu et un contrôle de contraste.
         </p>
       </div>
 

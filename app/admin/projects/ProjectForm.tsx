@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Reorder, useDragControls } from "framer-motion";
-import type { BasePaletteColor, SiteContent } from "@/lib/site-content/types";
 import type { Project, ProjectColor, ProjectFont, ProjectImage, ProjectLayout } from "@/lib/supabase/types";
 
 const LAYOUT_OPTIONS: { value: ProjectLayout; label: string }[] = [
@@ -95,13 +94,7 @@ function projectToForm(p: Project): FormState {
   };
 }
 
-export default function ProjectForm({
-  project,
-  basePalette = [],
-}: {
-  project?: Project;
-  basePalette?: BasePaletteColor[];
-}) {
+export default function ProjectForm({ project }: { project?: Project }) {
   const router = useRouter();
   const isEdit = !!project;
   const [form, setForm] = useState<FormState>(project ? projectToForm(project) : DEFAULT_STATE);
@@ -112,8 +105,6 @@ export default function ProjectForm({
   const fileRef = useRef<HTMLInputElement>(null);
   const fontFileRef = useRef<HTMLInputElement>(null);
   const [pendingRole, setPendingRole] = useState<string>(() => IMAGE_ROLES[project?.layout ?? "identity"][0]);
-  const [palettes, setPalettes] = useState<BasePaletteColor[]>(basePalette);
-  const [savingToBase, setSavingToBase] = useState<number | null>(null);
 
   function set<K extends keyof FormState>(key: K, val: FormState[K]) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -122,27 +113,6 @@ export default function ProjectForm({
   // Colors
   function addColor() {
     set("colors", [...form.colors, { hex: "#000000", label: "#000000", radius: "50%", gradient: false }]);
-  }
-  function addBaseColor(base: BasePaletteColor) {
-    set("colors", [...form.colors, { hex: base.hex, label: base.label || base.hex, radius: "50%", gradient: false }]);
-  }
-  // Envoie une couleur du projet dans la palette de base, sans quitter le formulaire
-  async function saveColorToBase(i: number) {
-    const c = form.colors[i];
-    const hex = colorPreviewHex(c);
-    setSavingToBase(i);
-    const current = (await fetch("/api/admin/site-content").then((r) => r.json())) as SiteContent;
-    const label = c.label && !normalizeHex(c.label) ? c.label : hex;
-    const res = await fetch("/api/admin/site-content", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...current, palette: [...current.palette, { hex, label }] }),
-    });
-    if (res.ok) {
-      const saved = (await res.json()) as SiteContent;
-      setPalettes(saved.palette);
-    }
-    setSavingToBase(null);
   }
   function updateColor(i: number, patch: Partial<ProjectColor>) {
     set("colors", form.colors.map((c, idx) => idx === i ? { ...c, ...patch } : c));
@@ -377,35 +347,6 @@ export default function ProjectForm({
         title="Palette de couleurs"
         hint="Les couleurs du projet s'affichent sous forme de petits ronds animés. Tu peux en mettre autant que tu veux."
       >
-        {palettes.length > 0 ? (
-          <div className="flex flex-col gap-2 p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.05)" }}>
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              <p className="font-body text-xs font-semibold" style={{ color: "var(--color-blue)" }}>
-                Palette de base — clique pour ajouter au projet
-              </p>
-              <a href="/admin/palette" className="font-body text-[11px] underline opacity-70" style={{ color: "var(--color-blue)" }}>Gérer la palette</a>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {palettes.map((b, i) => (
-                <button
-                  key={`${b.hex}-${i}`}
-                  type="button"
-                  onClick={() => addBaseColor(b)}
-                  className="flex items-center gap-2 px-2 py-1 rounded-full bg-white font-body text-xs transition-opacity hover:opacity-70"
-                  style={{ border: "1.5px solid rgba(9,46,103,0.15)", color: "var(--color-blue)" }}
-                >
-                  <span className="w-4 h-4 rounded-full shrink-0 border border-black/10" style={{ backgroundColor: b.hex }} />
-                  {b.label || b.hex}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <p className="font-body text-xs" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
-            Pas encore de palette de base.{" "}
-            <a href="/admin/palette" className="underline">Crée tes couleurs réutilisables</a> pour ne plus les retaper à chaque projet.
-          </p>
-        )}
         <div className="flex flex-col gap-3">
           {form.colors.map((c, i) => (
             <div key={i} className="flex gap-3 items-center flex-wrap p-3 rounded-xl" style={{ backgroundColor: "rgba(9,46,103,0.03)" }}>
@@ -436,16 +377,6 @@ export default function ProjectForm({
                 <input type="checkbox" checked={!!c.gradient} onChange={(e) => updateColor(i, { gradient: e.target.checked })} />
                 C&apos;est un gradient
               </label>
-              <button
-                type="button"
-                onClick={() => saveColorToBase(i)}
-                disabled={savingToBase === i}
-                title="Ajoute cette couleur à la palette de base, réutilisable dans tous les projets"
-                className="text-xs font-body px-2 py-1 rounded-full disabled:opacity-40"
-                style={{ border: "1.5px solid rgba(9,46,103,0.3)", color: "var(--color-blue)" }}
-              >
-                {savingToBase === i ? "…" : "★ Garder dans la base"}
-              </button>
               <button type="button" onClick={() => removeColor(i)} className="text-red-500 text-xs font-body px-2 py-1 rounded hover:bg-red-50">✕ Supprimer</button>
             </div>
           ))}

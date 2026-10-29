@@ -38,7 +38,7 @@ export default async function AdminDashboard() {
             className="font-body text-sm px-4 py-2 rounded-full"
             style={{ border: "1.5px solid var(--color-blue)", color: "var(--color-blue)" }}
           >
-            ◉ Palette de base
+            ◉ Couleurs du site
           </Link>
           <Link
             href="/admin/content"
