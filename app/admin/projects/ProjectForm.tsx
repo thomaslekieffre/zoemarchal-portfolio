@@ -42,6 +42,7 @@ type FormState = {
   display_order: number;
   published: boolean;
   school_project: boolean;
+  website_url: string;
 };
 
 const DEFAULT_STATE: FormState = {
@@ -58,6 +59,7 @@ const DEFAULT_STATE: FormState = {
   display_order: 0,
   published: true,
   school_project: false,
+  website_url: "",
 };
 
 function normalizeHex(value: string): string | null {
@@ -89,6 +91,7 @@ function projectToForm(p: Project): FormState {
     display_order: p.display_order,
     published: p.published,
     school_project: p.school_project ?? false,
+    website_url: p.website_url ?? "",
   };
 }
 
@@ -307,6 +310,10 @@ export default function ProjectForm({
               className="admin-input" placeholder="ex : rafale-ambulances" />
           </Field>
         </div>
+        <Field label="Lien du site" hint="Si rempli, le titre du projet sur le portfolio devient cliquable et ouvre ce site dans un nouvel onglet. Laisse vide sinon.">
+          <input value={form.website_url} onChange={(e) => set("website_url", e.target.value.trim())}
+            className="admin-input" placeholder="https://..." />
+        </Field>
         <Field label="Description (français)" hint="Texte affiché quand le site est en français.">
           <textarea value={form.description} onChange={(e) => set("description", e.target.value)}
             className="admin-input" rows={3} placeholder="J'ai réalisé... L'objectif était de..." />

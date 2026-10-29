@@ -4,6 +4,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import SchoolTag from "../SchoolTag";
+import SiteLink from "../SiteLink";
 import type { Project } from "@/lib/supabase/types";
 import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -65,7 +66,7 @@ export default function IdentityTemplate({
         )}
 
         {/* Layout : info gauche / visuels droite (Figma) */}
-        <div className="flex flex-col md:flex-row md:items-start gap-8 px-5 sm:px-8 lg:px-16 pt-4 pb-10">
+        <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-16 px-5 sm:px-8 lg:px-16 pt-4 pb-10">
 
           {/* Colonne info */}
           <motion.div
@@ -77,13 +78,13 @@ export default function IdentityTemplate({
             style={{ width: "min(380px, 100%)" }}
           >
             <div>
-              <div className="w-fit">
+              <SiteLink href={project.website_url ?? undefined} className="w-fit">
                 {project.school_project && <SchoolTag />}
                 <h3 className="font-heading" style={{ fontSize: "clamp(18px, 2vw, 26px)", color: project.text_color }}>
                   {project.title}
                 </h3>
                 <WavyUnderline width="100%" height={8} />
-              </div>
+              </SiteLink>
             </div>
 
             {project.description && (
@@ -150,12 +151,12 @@ export default function IdentityTemplate({
               <div className="flex flex-col gap-5 md:hidden">
                 {overlayImages.length > 0 && (
                   <div className="grid grid-cols-2 gap-4 w-full">
-                    {overlayImages.map((img, i) => (
+                    {overlayImages.map((img) => (
                       <div key={img.url} className="relative w-full aspect-[3/4]">
                         <ProjectImg
                           src={img.url} alt={project.title}
                           style={{ width: "100%", height: "100%" }}
-                          rotation={i === 0 ? 5 : -5}
+                          rotation={0}
                           objectFit="contain"
                         />
                       </div>
@@ -204,7 +205,7 @@ export default function IdentityTemplate({
               {/* Desktop — 2 lignes séparées */}
               <div className="hidden md:flex flex-col w-full" style={{ gap: "clamp(40px, 5vw, 64px)" }}>
                 {overlayImages.length > 0 && (
-                  <div className="relative w-full shrink-0" style={{ height: "clamp(340px, 38vw, 420px)" }}>
+                  <div className="relative w-full shrink-0" style={{ height: "clamp(420px, 48vw, 580px)" }}>
                     {overlayImages[0] && (
                       <motion.div
                         variants={slideUp}
@@ -212,12 +213,12 @@ export default function IdentityTemplate({
                         whileInView="visible"
                         viewport={inView}
                         className="absolute z-[2]"
-                        style={{ left: "2%", bottom: 0, height: "88%", aspectRatio: "1280/2128" }}
+                        style={{ left: "0%", bottom: 0, height: "100%", aspectRatio: "1280/2128" }}
                       >
                         <ProjectImg
                           src={overlayImages[0].url} alt={project.title}
                           style={{ width: "100%", height: "100%" }}
-                          rotation={6} objectFit="contain" transformOrigin="50% 80%"
+                          rotation={0} objectFit="contain"
                         />
                       </motion.div>
                     )}
@@ -233,7 +234,7 @@ export default function IdentityTemplate({
                         <ProjectImg
                           src={overlayImages[1].url} alt={project.title}
                           style={{ width: "100%", height: "100%" }}
-                          rotation={8} objectFit="contain" objectPosition="top" transformOrigin="50% 0%"
+                          rotation={0} objectFit="contain" objectPosition="top"
                         />
                       </motion.div>
                     )}

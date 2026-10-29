@@ -49,12 +49,6 @@ export default function ScallopDivider({
   return (
     <div className="relative w-full overflow-hidden" style={{ height: size }}>
       <div className="absolute inset-0" style={scallopStyle} />
-      {/* Même grain brique que les sections projet : évite la couture entre aplat et texture */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
-        style={{ backgroundImage: "url(/Texturelabs_Brick_124XL.jpg)", backgroundSize: "420px" }}
-      />
     </div>
   );
 }
