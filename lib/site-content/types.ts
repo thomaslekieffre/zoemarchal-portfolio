@@ -1,3 +1,5 @@
+import type { ThemeColors } from "./theme";
+
 export type ContactType = "instagram" | "discord" | "x" | "phone" | "email";
 
 export type SiteContact = {
@@ -22,12 +24,6 @@ export type SiteTestimonial = {
   quote: string;
 };
 
-/** Couleur de la palette de base, réutilisable dans les projets */
-export type BasePaletteColor = {
-  hex: string;
-  label: string;
-};
-
 export type LocaleContent = {
   greeting: string;
   bio1: string;
@@ -43,7 +39,8 @@ export type LocaleContent = {
 export type SiteContent = {
   fr: LocaleContent;
   en: LocaleContent;
-  palette: BasePaletteColor[];
+  /** Couleurs du site (tokens Tailwind), éditables dans l'admin */
+  theme: ThemeColors;
 };
 
 export type SiteContentRow = {

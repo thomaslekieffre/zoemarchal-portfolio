@@ -4,6 +4,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { SiteContentProvider } from "@/lib/i18n/SiteContentContext";
 import { getSiteContent } from "@/lib/site-content/get-site-content";
+import { themeCssVars } from "@/lib/site-content/theme";
 import {
   Borel,
   Sen,
@@ -91,8 +92,9 @@ export default async function RootLayout({
 }>) {
   const siteContent = await getSiteContent();
 
+  // Couleurs du site : redéfinies sur <html>, les utilitaires Tailwind (var(--color-*)) suivent
   return (
-    <html lang="fr">
+    <html lang="fr" style={themeCssVars(siteContent.theme)}>
       <body
         className={`${dmSans.variable} ${righteous.variable} ${nunito.variable} ${sen.variable} ${borel.variable} ${jost.variable} ${barlowCondensed.variable}`}
       >

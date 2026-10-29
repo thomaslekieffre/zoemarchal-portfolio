@@ -49,13 +49,13 @@ export default function About() {
 
           <motion.div custom={0} initial="hidden" whileInView="visible" viewport={inView} variants={fadeUp} className="flex-1">
             <SectionTitle size="lg">{content.greeting}</SectionTitle>
-            <p className="font-body text-sm md:text-base leading-relaxed mt-3 max-w-prose" style={{ color: "#092e67" }}>
+            <p className="font-body text-sm md:text-base leading-relaxed mt-3 max-w-prose" style={{ color: "var(--color-blue)" }}>
               {content.bio1}
             </p>
-            <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "#092e67" }}>
+            <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "var(--color-blue)" }}>
               {content.bio2}
             </p>
-            <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "#092e67" }}>
+            <p className="font-body text-sm md:text-base leading-relaxed mt-2 max-w-prose" style={{ color: "var(--color-blue)" }}>
               {content.bio3}
             </p>
           </motion.div>
@@ -70,7 +70,7 @@ export default function About() {
                   style={{ border: "1.5px solid #A17CC1", color: "#A17CC1" }}>
                   {exp.label}
                 </span>
-                <p className="font-body text-sm leading-relaxed opacity-75 mt-1 whitespace-pre-line" style={{ color: "#092e67" }}>
+                <p className="font-body text-sm leading-relaxed opacity-75 mt-1 whitespace-pre-line" style={{ color: "var(--color-blue)" }}>
                   {exp.description}
                 </p>
               </div>
@@ -82,10 +82,10 @@ export default function About() {
               <SectionTitle>{ta.education}</SectionTitle>
               {content.education.map((edu, i) => (
                 <div key={i} className={i > 0 ? "mt-3" : ""}>
-                  <span className="font-body text-sm opacity-60" style={{ color: "#092e67" }}>
+                  <span className="font-body text-sm opacity-60" style={{ color: "var(--color-blue)" }}>
                     {edu.degree}
                   </span>
-                  <p className="font-body text-sm mt-1" style={{ color: "#092e67" }}>
+                  <p className="font-body text-sm mt-1" style={{ color: "var(--color-blue)" }}>
                     {edu.subjects}
                   </p>
                 </div>

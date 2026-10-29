@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { defaultSiteContent } from "./defaults";
+import { mergeTheme } from "./theme";
 import type { LocaleContent, SiteContent } from "./types";
 
 function mergeLocale(stored: Partial<LocaleContent> | undefined, fallback: LocaleContent): LocaleContent {
@@ -17,11 +18,18 @@ function mergeLocale(stored: Partial<LocaleContent> | undefined, fallback: Local
   };
 }
 
-export function mergeSiteContent(stored: Partial<SiteContent> | null | undefined): SiteContent {
+// Format intermédiaire (couleurs fond/texte seulement) : on le convertit vers theme
+type LegacySiteColors = { siteColors?: { bg?: string; text?: string } };
+
+export function mergeSiteContent(
+  stored: (Partial<SiteContent> & LegacySiteColors) | null | undefined,
+): SiteContent {
+  const legacy = stored?.siteColors;
+  const fromLegacy = legacy ? { blue: legacy.bg, peach: legacy.text } : undefined;
   return {
     fr: mergeLocale(stored?.fr, defaultSiteContent.fr),
     en: mergeLocale(stored?.en, defaultSiteContent.en),
-    palette: stored?.palette ?? defaultSiteContent.palette,
+    theme: mergeTheme({ ...fromLegacy, ...stored?.theme }),
   };
 }
 
