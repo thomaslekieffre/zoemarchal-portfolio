@@ -3,6 +3,7 @@
 import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
+import SchoolTag from "../SchoolTag";
 import type { Project } from "@/lib/supabase/types";
 import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -77,6 +78,7 @@ export default function IdentityTemplate({
           >
             <div>
               <div className="w-fit">
+                {project.school_project && <SchoolTag />}
                 <h3 className="font-heading" style={{ fontSize: "clamp(18px, 2vw, 26px)", color: project.text_color }}>
                   {project.title}
                 </h3>

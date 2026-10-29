@@ -35,6 +35,8 @@ export type Project = {
   images: ProjectImage[];
   display_order: number;
   published: boolean;
+  /** Affiche un tag « projet scolaire » sur le portfolio */
+  school_project: boolean;
   created_at: string;
 };
 

@@ -37,6 +37,7 @@ export const translations = {
       colors: "Palette de couleurs",
       typography: "Typographie",
       typographies: "Typographies",
+      school_project: "Projet scolaire",
     },
     // Footer
     footer: {
@@ -83,6 +84,7 @@ export const translations = {
       colors: "Color palette",
       typography: "Typography",
       typographies: "Typographies",
+      school_project: "School project",
     },
     // Footer
     footer: {
@@ -112,6 +114,7 @@ export type Translations = {
   projects: {
     my_projects: string; presentation: string;
     colors: string; typography: string; typographies: string;
+    school_project: string;
   };
   footer: { credit_dev: string; credit_design: string };
 };

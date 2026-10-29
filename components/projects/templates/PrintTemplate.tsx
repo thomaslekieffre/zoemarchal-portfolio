@@ -3,6 +3,7 @@
 import ProjectImage from "@/components/ProjectImage";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
+import SchoolTag from "../SchoolTag";
 import type { Project } from "@/lib/supabase/types";
 import { inView, slideUp } from "@/lib/motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -67,6 +68,7 @@ export default function PrintTemplate({ project }: { project: Project }) {
               className="flex flex-col gap-8 pt-2"
             >
               <div className="w-fit">
+                {project.school_project && <SchoolTag />}
                 <h3 className="font-heading" style={{ fontSize: 32, color: project.text_color, fontWeight: 400, lineHeight: 1 }}>
                   {project.title}
                 </h3>
