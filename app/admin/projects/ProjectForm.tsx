@@ -41,6 +41,7 @@ type FormState = {
   images: ProjectImage[];
   display_order: number;
   published: boolean;
+  school_project: boolean;
 };
 
 const DEFAULT_STATE: FormState = {
@@ -56,6 +57,7 @@ const DEFAULT_STATE: FormState = {
   images: [],
   display_order: 0,
   published: true,
+  school_project: false,
 };
 
 function normalizeHex(value: string): string | null {
@@ -86,6 +88,7 @@ function projectToForm(p: Project): FormState {
     images: p.images,
     display_order: p.display_order,
     published: p.published,
+    school_project: p.school_project ?? false,
   };
 }
 
@@ -338,10 +341,14 @@ export default function ProjectForm({
               ))}
             </select>
           </Field>
-          <div className="flex items-end pb-0.5 pt-4">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-0.5 pt-4">
             <label className="flex items-center gap-2 cursor-pointer font-body text-sm" style={{ color: "var(--color-blue)" }}>
               <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="w-4 h-4" />
               Visible sur le portfolio
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer font-body text-sm" style={{ color: "var(--color-blue)" }}>
+              <input type="checkbox" checked={form.school_project} onChange={(e) => set("school_project", e.target.checked)} className="w-4 h-4" />
+              Projet scolaire
             </label>
           </div>
         </div>
