@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Reorder, useDragControls } from "framer-motion";
 import type { Project, ProjectColor, ProjectFont, ProjectImage, ProjectLayout } from "@/lib/supabase/types";
+import { isVideoUrl } from "@/components/ProjectMedia";
 
 const LAYOUT_OPTIONS: { value: ProjectLayout; label: string }[] = [
   { value: "identity", label: "Identité visuelle — texte + palette + polices à gauche, images à droite" },
@@ -21,7 +22,7 @@ const IMAGE_ROLES: Record<ProjectLayout, string[]> = {
   ui: ["grid"],
   print: ["hero", "portrait", "mockup"],
   gallery: ["hero", "image"],
-  grid: ["image"],
+  grid: ["image", "wide"],
   mosaic: ["image"],
   motion: ["hero", "image"],
   editorial: ["hero", "image"],
@@ -233,6 +234,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
     grid: (
       <ul className="list-disc pl-4 space-y-0.5">
         <li><strong>image</strong> (index 0, 1, 2…) — photos affichées dans l'ordre, 3 par ligne</li>
+        <li><strong>wide</strong> — média en paysage sur 2 colonnes (vidéo mp4 ou GIF court conseillé)</li>
       </ul>
     ),
     mosaic: (
@@ -472,7 +474,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
             <label className="font-body text-xs font-medium" style={{ color: "var(--color-blue)", opacity: 0.6 }}>
               Sélectionner le(s) fichier(s)
             </label>
-            <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleUpload} className="font-body text-sm" disabled={uploading} />
+            <input ref={fileRef} type="file" accept="image/*,video/mp4,video/webm,video/quicktime" multiple onChange={handleUpload} className="font-body text-sm" disabled={uploading} />
           </div>
           {uploading && (
             <div className="flex items-center gap-2">
@@ -564,8 +566,12 @@ function ImageRow({
         ⋮⋮
       </div>
       <span className="font-body text-xs w-6 text-center" style={{ color: "var(--color-blue)", opacity: 0.5 }}>{position}</span>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={img.url} alt="" className="w-14 h-14 object-cover rounded-lg shrink-0" />
+      {isVideoUrl(img.url) ? (
+        <video src={img.url} muted playsInline preload="metadata" className="w-14 h-14 object-cover rounded-lg shrink-0" />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={img.url} alt="" className="w-14 h-14 object-cover rounded-lg shrink-0" />
+      )}
       <div className="flex flex-col flex-1 min-w-0 gap-1">
         <span className="font-body text-[10px] opacity-50" style={{ color: "var(--color-blue)" }}>Rôle</span>
         <select value={img.role} onChange={(e) => onRoleChange(e.target.value)} className="admin-input py-1 text-xs">

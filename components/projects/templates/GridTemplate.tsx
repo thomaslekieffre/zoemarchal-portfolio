@@ -1,6 +1,6 @@
 "use client";
 
-import ProjectImage from "@/components/ProjectImage";
+import ProjectMedia from "@/components/ProjectMedia";
 import { motion } from "framer-motion";
 import WavyUnderline from "../../WavyUnderline";
 import SchoolTag from "../SchoolTag";
@@ -12,10 +12,13 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 /**
  * grid   : grille régulière 3 colonnes (2 sur mobile), photos recadrées en carré
  * mosaic : mosaïque en colonnes (masonry), photos gardées à leur format d'origine
+ * role "wide" (grid seulement) : média en paysage sur 2 colonnes (idéal pour une vidéo courte)
  */
 export default function GridTemplate({ project, variant }: { project: Project; variant: "grid" | "mosaic" }) {
   const { t, lang } = useLanguage();
-  const images = project.images.filter((i) => i.role === "image").sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  const images = project.images
+    .filter((i) => i.role === "image" || i.role === "wide")
+    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
   return (
     <section className="w-full overflow-hidden" style={{ backgroundColor: project.bg_color }}>
@@ -84,28 +87,22 @@ export default function GridTemplate({ project, variant }: { project: Project; v
             viewport={inView}
             className={variant === "grid" ? "grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4" : "columns-2 md:columns-3 gap-3 sm:gap-4"}
           >
-            {images.map((img, i) => (
-              <div
-                key={`${img.url}-${i}`}
-                className={`relative overflow-hidden rounded-2xl ${variant === "mosaic" ? "mb-3 sm:mb-4 break-inside-avoid" : ""}`}
-                style={variant === "grid" ? { aspectRatio: "1/1" } : undefined}
-              >
-                {variant === "grid" ? (
-                  <ProjectImage
-                    src={img.url} alt={`${project.title} ${i + 1}`} fill className="object-cover"
+            {images.map((img, i) => {
+              const wide = variant === "grid" && img.role === "wide";
+              return (
+                <div
+                  key={`${img.url}-${i}`}
+                  className={`relative overflow-hidden rounded-2xl ${wide ? "col-span-2" : ""} ${variant === "mosaic" ? "mb-3 sm:mb-4 break-inside-avoid" : ""}`}
+                  style={variant === "grid" ? { aspectRatio: wide ? "16/9" : "1/1" } : undefined}
+                >
+                  <ProjectMedia
+                    src={img.url} alt={`${project.title} ${i + 1}`}
+                    fill={variant === "grid"}
                     sizes="(min-width: 768px) 33vw, 50vw"
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={img.url} alt={`${project.title} ${i + 1}`} className="block w-full h-auto"
-                    loading="lazy"
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                  />
-                )}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </motion.div>
         )}
 
